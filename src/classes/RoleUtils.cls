@@ -9,7 +9,7 @@ public with sharing class RoleUtils {
     // get all of the roles underneath the user
     Set<Id> allSubRoleIds = getAllSubRoleIds(new Set<ID>{roleId});
     // get all of the ids for the users in those roles
-    return [Select Id, Name From User where ForecastEnabled = TRUE AND UserRoleId IN :allSubRoleIds ORDER BY Name]; 
+    return [Select Id, Name From User where ForecastEnabled = TRUE AND UserRoleId IN :allSubRoleIds]; 
   }
  
   private static Set<ID> getAllSubRoleIds(Set<ID> roleIds) {

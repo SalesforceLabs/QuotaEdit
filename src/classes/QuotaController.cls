@@ -83,7 +83,7 @@ public with sharing class QuotaController {
 		// be able to see and set the quotas of all the Forecasting Enabled
 		// users.	
 		if (PermUtil.isReadWriteAll() || PermUtil.isReadOnlyAll()) {
-			forecastUsers = [SELECT Id, Name FROM User WHERE ForecastEnabled = TRUE ORDER BY Name];
+			forecastUsers = [SELECT Id, Name FROM User WHERE ForecastEnabled = TRUE];
 		}
 		else if (PermUtil.isReadWriteBelowMe()){
 			// Traverse the role hierarchy and find all the subordinates.
@@ -126,8 +126,10 @@ public with sharing class QuotaController {
 				quota.currencyIsoCode = (String) sobj.get('CurrencyIsoCode');
 			}				
 		}			
+		List<QuotaModel> ret = quotaMap.values();
+		ret.sort();
 		
-		return quotaMap.values();
+		return ret;
 	}
 	
 	public static PageReference save() {
