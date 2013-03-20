@@ -19,6 +19,9 @@ public with sharing class QuotaController {
 		else if (PermUtil.isReadWriteBelowMe()) {
 			ret = 'You have permission to view and edit quotas for Forecast Enabled users in your forecasting hierarchy';
 		}
+		else if (PermUtil.isReadOnlyBelowMe()) {
+			ret = 'You have permission to view (not edit) quotas for Forecast Enabled users in your forecasting hierarchy';
+		}
 		else {
 			ret = 'You do not have permission to view quotas';
 		}
@@ -26,7 +29,7 @@ public with sharing class QuotaController {
 	}
 	
 	public static boolean getSaveDisabled() {
-		return PermUtil.isReadOnlyAll();
+		return PermUtil.isReadOnlyAll() || PermUtil.isReadOnlyBelowMe();
 	}
 	
 	
@@ -85,7 +88,7 @@ public with sharing class QuotaController {
 		if (PermUtil.isReadWriteAll() || PermUtil.isReadOnlyAll()) {
 			forecastUsers = [SELECT Id, Name FROM User WHERE ForecastEnabled = TRUE];
 		}
-		else if (PermUtil.isReadWriteBelowMe()){
+		else if (PermUtil.isReadWriteBelowMe() || PermUtil.isReadOnlyBelowMe()) {
 			// Traverse the role hierarchy and find all the subordinates.
 			forecastUsers = RoleUtils.getRoleSubordinateUsers(Id.valueOf(UserInfo.getUserId()));  
 		}

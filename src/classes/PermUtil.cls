@@ -2,6 +2,7 @@ public with sharing class PermUtil {
 
 	private static boolean manageQuotas = null;
 	private static boolean viewAllForecasts = null;
+	private static boolean forecastingEnabled = null;
 	
 	private static boolean hasManageQuotas() {
 		if (manageQuotas == null) {
@@ -23,6 +24,15 @@ public with sharing class PermUtil {
 		return viewAllForecasts;		
 	}
 	
+	public static boolean hasForecastingEnabled() {
+		Id userId = Id.valueOf(UserInfo.getUserId());
+		if (forecastingEnabled == null) {
+			List<User> b = [SELECT ForecastEnabled from User WHERE Id=:userId];
+			forecastingEnabled = (b != null && b.size() > 0) ? b.get(0).ForecastEnabled : false;	
+		}
+		return forecastingEnabled;
+	}
+	
 	
 	public static boolean isReadOnlyAll() {
 		return hasViewAllForecasts() && !hasManageQuotas();
@@ -34,6 +44,10 @@ public with sharing class PermUtil {
 	
 	public static boolean isReadWriteBelowMe() {
 		return hasManageQuotas();
+	}
+	
+	public static boolean isReadOnlyBelowMe() {
+		return !hasViewAllForecasts() && !hasManageQuotas() && hasForecastingEnabled();
 	}
 	
 
