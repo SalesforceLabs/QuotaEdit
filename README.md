@@ -2,7 +2,7 @@ QuotaEdit
 =========
 
 UI for viewing and editing quotas for Collaborative Forecasting
-[[QuotaEdit/QuotaUI.png]]
+[[/QuotaEdit/QuotaUI.png]]
 
 Version 0.1 - 2013-03-14
 ------------------------
