@@ -1,4 +1,4 @@
-public class QuotaModel {
+global class QuotaModel implements Comparable {
 	public Id quotaId { get; set; }
 	public Id ownerId { get; set; }
 	public string ownerName { get; set; }
@@ -21,5 +21,9 @@ public class QuotaModel {
 		return amountStr;
 	}
 	
+	global Integer CompareTo(Object compareTo) {
+		QuotaModel compareToQuota = (QuotaModel) compareTo;
+		return this.ownerName.compareTo(compareToQuota.ownerName);
+	}
 	
 }
