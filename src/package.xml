@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>CalendarUtil</members>
-        <members>CurrencyUtil</members>
-        <members>PermUtil</members>
-        <members>QuotaControllTest</members>
-        <members>QuotaController</members>
-        <members>QuotaModel</members>
-        <members>RoleUtils</members>
-        <name>ApexClass</name>
-    </types>
-    <types>
-        <members>QuotaEdit</members>
-        <name>ApexPage</name>
+        <members>Edit_Quotas</members>
+        <name>CustomTab</name>
     </types>
     <version>26.0</version>
 </Package>
