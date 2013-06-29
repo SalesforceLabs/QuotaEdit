@@ -1,8 +1,8 @@
 public with sharing class QuotaController {
 	
-	String quotaYear = String.valueOf(Date.today().year());
 	String quotaMonth = String.valueOf(Date.today().month());
-	String monthName = CalendarUtil.getMonthName(Integer.valueOf(quotaMonth));
+	Date startDate = CalendarUtil.getPeriodForNow();
+
 	static Id editUserId = null;
 	
 	public static Map<Id,QuotaModel> quotaMap = null;
@@ -37,29 +37,16 @@ public with sharing class QuotaController {
 	}
 	
 	
-	public String getQuotaYear() {
-		return quotaYear;
+	public String getStartDatePeriod() {
+		return startDate.format();
 	}
-	
-	public void setQuotaYear(String quotaYear) {
-		this.quotaYear = quotaYear;
-		quotaMap = null;
+	 
+	public void setStartDatePeriod(String startDateStr) {
+		Date inputDate = Date.parse(startDateStr);
+		this.startDate = Date.newInstance(inputDate.year(), inputDate.month(), inputDate.day());
+		quotaMap = null; 
 	}
 
-	public String getQuotaMonth() {
-		return quotaMonth;
-	}	
-	
-	public void setQuotaMonth(String quotaMonth) {
-		this.quotaMonth = quotaMonth;
-		this.monthName = CalendarUtil.getMonthName(Integer.valueOf(quotaMonth));
-		quotaMap = null;
-	}
-	
-	public String getMonthName() {
-		return monthName;
-	}
-	
 	public static Id getEditUserId() {
 		return editUserId;
 	}
@@ -91,9 +78,8 @@ public with sharing class QuotaController {
 			ret.sort();
 			return ret;
 		}
-		Date quotaDate = Date.newInstance(Integer.valueOf(quotaYear), Integer.valueOf(quotaMonth), 1);
-		System.debug(loggingLevel.INFO, 'Fetching quotas for date=' + quotaDate);
-		return getQuotasForPeriod(quotaDate);
+		System.debug(loggingLevel.INFO, 'Fetching quotas for date=' + startDate);
+		return getQuotasForPeriod(startDate);
 	}
 	
 	public static List<QuotaModel> getQuotasForPeriod(Date startDate) {
@@ -181,13 +167,9 @@ public with sharing class QuotaController {
 		quotaMap = null;
 		return null;
 	}
-	
-	public static List<SelectOption> getAvailableYears() {
-		return CalendarUtil.getAvailableYears();
-	}
-	
-	public static List<SelectOption> getAvailableMonths() {
-		return CalendarUtil.getAvailableMonths();
+		
+	public static List<SelectOption> getAvailablePeriods() {
+		return CalendarUtil.getAvailableMonthlyPeriods();
 	}
 	
 	public boolean getRenderCurrencyColumn() {

@@ -1,12 +1,8 @@
 <apex:page controller="QuotaController">
 	<apex:form >
-		<apex:selectList value="{!quotaYear}" multiSelect="false" size="1">
+		<apex:selectList value="{!startDatePeriod}" multiSelect="false" size="1">
 			<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
-			<apex:selectOptions value="{!availableYears}"/>
-		</apex:selectList>&nbsp;
-		<apex:selectList value="{!quotaMonth}" multiSelect="false" size="1">
-			<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
-			<apex:selectOptions value="{!availableMonths}"/>&nbsp;
+			<apex:selectOptions value="{!availablePeriods}"/>
 		</apex:selectList>&nbsp;
 		<apex:actionStatus id="updatingStatus" startText=" (refreshing...)" stopText=""/>
        	<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>
@@ -26,7 +22,7 @@
 	</apex:form><br/>
         	
     <apex:form id="quotaTable">
-        <apex:pageBlock id="pageBlock" title="Quotas for {!monthName} {!quotaYear}">
+        <apex:pageBlock id="pageBlock" title="Quotas for period starting {!startDatePeriod}">
             <apex:pageMessages />
             <apex:pageBlockButtons >
                 <apex:commandButton value="Save" action="{!save}" disabled="{!saveDisabled}"/>
@@ -36,7 +32,7 @@
 		        		<apex:outputText value="{!q.ownerName}" style="width:150px"/>
 		        	</apex:column>
 
- 	        		<apex:column id="quotaColumn" headerValue="Quota (amount)" style="width:100px">
+ 	        		<apex:column id="quotaColumn" headerValue="Quota (amount)" style="width:100px;height:20px">
 	        			<apex:inputText id="quotaInput" size="11" value="{!q.amount}"
  	        				rendered="{!ISNULL(q.amount) || q.ownerId == editUserId}"/>
  	        			<apex:commandLink id="quotaOutput" action="{!editCell}" value="{!q.amountString}" 
