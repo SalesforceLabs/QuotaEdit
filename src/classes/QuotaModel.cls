@@ -2,11 +2,19 @@ global class QuotaModel implements Comparable {
 	public Id quotaId { get; set; }
 	public Id ownerId { get; set; }
 	public string ownerName { get; set; }
-	public double amount {get; set; }
+	public double amount;
 	public string currencyIsoCode {get; set; }
 	public date startDate {get; set; }
 	public string periodId {get; set; }
 	
+	public void setAmount(double amount) {
+		System.debug('Amount being set to ' + amount + ' for owner ' + ownerName);
+		this.amount = amount;
+	}
+	
+	public double getAmount() {
+		return amount;
+	}
 	
 	public String getAmountString() {
 		String amountStr = String.valueOf(amount);

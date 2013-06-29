@@ -3,6 +3,10 @@ public with sharing class QuotaController {
 	String quotaYear = String.valueOf(Date.today().year());
 	String quotaMonth = String.valueOf(Date.today().month());
 	String monthName = CalendarUtil.getMonthName(Integer.valueOf(quotaMonth));
+	static Id editUserId = null;
+	
+	public static Map<Id,QuotaModel> quotaMap = null;
+	
 	
 	public static String getHeaderMessage() {
 		// If showing all quotas
@@ -39,6 +43,7 @@ public with sharing class QuotaController {
 	
 	public void setQuotaYear(String quotaYear) {
 		this.quotaYear = quotaYear;
+		quotaMap = null;
 	}
 
 	public String getQuotaMonth() {
@@ -48,10 +53,19 @@ public with sharing class QuotaController {
 	public void setQuotaMonth(String quotaMonth) {
 		this.quotaMonth = quotaMonth;
 		this.monthName = CalendarUtil.getMonthName(Integer.valueOf(quotaMonth));
+		quotaMap = null;
 	}
 	
 	public String getMonthName() {
 		return monthName;
+	}
+	
+	public static Id getEditUserId() {
+		return editUserId;
+	}
+	
+	public static void setEditUserId(Id ownerId) {
+		editUserId = ownerId;
 	}
 		
 
@@ -71,11 +85,16 @@ public with sharing class QuotaController {
 	}
 	
 	public List<QuotaModel> getQuotas() {
+//		setEditUserId(null);
+		if (quotaMap != null) {
+			List<QuotaModel> ret = quotaMap.values();
+			ret.sort();
+			return ret;
+		}
 		Date quotaDate = Date.newInstance(Integer.valueOf(quotaYear), Integer.valueOf(quotaMonth), 1);
+		System.debug(loggingLevel.INFO, 'Fetching quotas for date=' + quotaDate);
 		return getQuotasForPeriod(quotaDate);
 	}
-	
-	public static Map<Id,QuotaModel> quotaMap = null;
 	
 	public static List<QuotaModel> getQuotasForPeriod(Date startDate) {
 
@@ -136,9 +155,11 @@ public with sharing class QuotaController {
 	}
 	
 	public static PageReference save() {
+//		setEditUserId(null);
 		List<ForecastingQuota> quotasList = new List<ForecastingQuota>();
 		
 		for (QuotaModel q : quotaMap.values()) {
+			System.debug(loggingLevel.INFO, 'Save:' + q.ownerName + '=' + q.amount);
 			
 			// Don't save blank values. Look for objects where the ID and amount are null.
 			// No support for deleting quotas - if clearing out a prevoiusly-saved quota,
@@ -153,9 +174,11 @@ public with sharing class QuotaController {
 				sObject sobj = fq;
 				sobj.put('CurrencyIsoCode', q.currencyIsoCode);				
 			}
+			System.debug('Going to save this quota: amount=' + fq.QuotaAmount + ', owner=' + fq.QuotaOwnerId);
 			quotasList.add(fq);
 		}
 		upsert quotasList;
+		quotaMap = null;
 		return null;
 	}
 	
@@ -185,6 +208,13 @@ public with sharing class QuotaController {
     }     
     public void showPopup() {        
         displayPopup = true;    
+    }
+		
+	public PageReference editCell() {
+		Id paramId = ApexPages.currentPage().getParameters().get('editOwnerId');
+		System.debug(logginglevel.INFO, 'Called edit with userId=' + paramId);
+		setEditUserId(paramId);
+		return null;
     }
 	
 	
