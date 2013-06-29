@@ -1,6 +1,5 @@
 public with sharing class QuotaController {
 	
-	String quotaMonth = String.valueOf(Date.today().month());
 	Date startDate = CalendarUtil.getPeriodForNow();
 
 	static Id editUserId = null;

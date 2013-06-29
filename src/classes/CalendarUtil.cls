@@ -16,7 +16,7 @@ public with sharing class CalendarUtil {
 	
 	public static Date getPeriodForNow() {
 		Date today = Date.today();
-		List<Period> periods = [SELECT StartDate FROM Period Where EndDate <= :today AND StartDate >= :today LIMIT 1];
+		List<Period> periods = [SELECT StartDate FROM Period Where EndDate >= :today AND StartDate <= :today ORDER BY StartDate DESC LIMIT 1];
 		if (periods == null || periods.size() == 0)
 			return today;
 		return periods.get(0).StartDate;
