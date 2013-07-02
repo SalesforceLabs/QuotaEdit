@@ -1,10 +1,12 @@
 public with sharing class QuotaController {
 	
 	Date startDate = CalendarUtil.getPeriodForNow();
+	
+	public static Date futureDate = CalendarUtil.getPeriodForNow();
 
 	static Id editUserId = null;
 	
-	public static Map<Id,QuotaModel> quotaMap = null;
+	public static Map<Id,QuotaModel> quotaMap = new Map<Id,QuotaModel>();
 	
 	
 	public static String getHeaderMessage() {
@@ -43,7 +45,16 @@ public with sharing class QuotaController {
 	public void setStartDatePeriod(String startDateStr) {
 		Date inputDate = Date.parse(startDateStr);
 		this.startDate = Date.newInstance(inputDate.year(), inputDate.month(), inputDate.day());
-		quotaMap = null; 
+		quotaMap.clear(); 
+	}
+	
+	public static String getFuturePeriod() {
+		return futureDate.format();
+	}
+	
+	public static void setFuturePeriod(String futurePeriodStr) {
+		Date inputDate = Date.parse(futurePeriodStr);
+		futureDate = Date.newInstance(inputDate.year(), inputDate.month(), inputDate.day());		
 	}
 
 	public static Id getEditUserId() {
@@ -72,19 +83,19 @@ public with sharing class QuotaController {
 	
 	public List<QuotaModel> getQuotas() {
 //		setEditUserId(null);
-		if (quotaMap != null) {
+		if (!quotaMap.isEmpty()) {
 			List<QuotaModel> ret = quotaMap.values();
 			ret.sort();
 			return ret;
 		}
 		System.debug(loggingLevel.INFO, 'Fetching quotas for date=' + startDate);
-		return getQuotasForPeriod(startDate);
+		return getQuotasForPeriod(startDate, quotaMap);
 	}
 	
-	public static List<QuotaModel> getQuotasForPeriod(Date startDate) {
+	public static List<QuotaModel> getQuotasForPeriod(Date startDate, Map<Id,QuotaModel> quotaMapForFetch) {
 
 		List<User> forecastUsers = new List<User>();
-		quotaMap = new Map<Id,QuotaModel>();
+		quotaMapForFetch.clear();
 
 		// Someone with "View All Forecasts" and "Manage Quotas" should
 		// be able to see and set the quotas of all the Forecasting Enabled
@@ -105,10 +116,10 @@ public with sharing class QuotaController {
 			quota.ownerId = user.Id;
 			quota.startDate = startDate;
 			quota.currencyIsoCode = isMultiCurrencyOrg ? CurrencyUtil.getUserDefaultCurrency(quota.OwnerId) : null;
-			quotaMap.put(user.Id, quota);
+			quotaMapForFetch.put(user.Id, quota);
 		}
 		
-		Set<Id> userIds = quotaMap.keySet();
+		Set<Id> userIds = quotaMapForFetch.keySet();
 		
 		// We have to use this clunky query creation, rather than using
 		// the [SELECT... ] method, because if we reference CurrencyIsoCode
@@ -124,7 +135,7 @@ public with sharing class QuotaController {
 			
 		for (SObject sobj : quotasFromDB) {
 			Id userId = (Id) sobj.get('QuotaOwnerId');
-			QuotaModel quota = quotaMap.get(userId);
+			QuotaModel quota = quotaMapForFetch.get(userId);
 						
 			quota.quotaId = sobj.Id;
 			quota.periodId = (String) sobj.get('PeriodId');
@@ -133,17 +144,23 @@ public with sharing class QuotaController {
 				quota.currencyIsoCode = (String) sobj.get('CurrencyIsoCode');
 			}				
 		}			
-		List<QuotaModel> ret = quotaMap.values();
+		List<QuotaModel> ret = quotaMapForFetch.values();
 		ret.sort();
-		
 		return ret;
 	}
 	
 	public static PageReference save() {
+		PageReference ret = saveInternal(quotaMap.values());
+		quotaMap.clear();
+		return ret;
+	}
+	
+	private static PageReference saveInternal(List<QuotaModel> quotaModelList) {
+		
 //		setEditUserId(null);
 		List<ForecastingQuota> quotasList = new List<ForecastingQuota>();
 		
-		for (QuotaModel q : quotaMap.values()) {
+		for (QuotaModel q : quotaModelList) {
 			System.debug(loggingLevel.INFO, 'Save:' + q.ownerName + '=' + q.amount);
 			
 			// Don't save blank values. Look for objects where the ID and amount are null.
@@ -163,7 +180,6 @@ public with sharing class QuotaController {
 			quotasList.add(fq);
 		}
 		upsert quotasList;
-		quotaMap = null;
 		return null;
 	}
 		
@@ -196,6 +212,25 @@ public with sharing class QuotaController {
 		System.debug(logginglevel.INFO, 'Called edit with userId=' + paramId);
 		setEditUserId(paramId);
 		return null;
+    }
+    
+    public static PageReference applyToPeriod() {
+    	// Get current period's quotas
+    	List<QuotaModel> currentPeriodQuotas = quotaMap.values();
+    	// Create new ones with the future start date
+    	List<QuotaModel> futurePeriodQuotas = new List<QuotaModel>();
+    	for (QuotaModel m : currentPeriodQuotas) {
+    		if (m.amount == null || m.amount == 0.0)
+    			continue;
+    		QuotaModel m2 = new QuotaModel();
+    		m2.ownerName = m.ownerName;
+			m2.ownerId = m.ownerId;
+			m2.startDate = futureDate;
+			m2.amount = m.amount;
+			m2.currencyIsoCode = m.currencyIsoCode;
+    		futurePeriodQuotas.add(m2);
+    	}
+    	return saveInternal(futurePeriodQuotas);
     }
 	
 	

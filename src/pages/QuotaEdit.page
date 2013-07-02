@@ -26,6 +26,12 @@
             <apex:pageMessages />
             <apex:pageBlockButtons >
                 <apex:commandButton value="Save" action="{!save}" disabled="{!saveDisabled}"/>
+                <br/>Copy this period's quota to ...
+                <apex:selectList value="{!futurePeriod}" multiSelect="false" size="1">
+					<!-- <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/> -->
+					<apex:selectOptions value="{!availablePeriods}"/>
+				</apex:selectList>&nbsp;
+                <apex:commandButton value="OK" action="{!applyToPeriod}" />
             </apex:pageBlockButtons>
     		<apex:pageBlockTable id="pageBlockTable" style="width:350px" value="{!quotas}" var="q">
  		        	<apex:column id="nameColumn" headerValue="Name">
