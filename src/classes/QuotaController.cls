@@ -8,7 +8,7 @@ public with sharing class QuotaController {
 
 	static Id editUserId = null;
 	
-	public static Map<Id,QuotaModel> quotaMap = new Map<Id,QuotaModel>();
+	public Map<Id,QuotaModel> quotaMap = new Map<Id,QuotaModel>();
 	
 	
 	public static String getHeaderMessage() {

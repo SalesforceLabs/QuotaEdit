@@ -50,8 +50,9 @@ private class QuotaControllTest {
     	User a = createUser(emaila, 'ForecastingUser', TRUE);
     	
     	User b = createUser('b@quota.com', 'Non-ForecastingUser', FALSE);
+    	QuotaController qc = new QuotaController();
     	
-    	List<QuotaModel> ret = QuotaController.getQuotasForPeriod(Date.newInstance(2013, 3, 1), QuotaController.quotaMap);
+    	List<QuotaModel> ret = qc.getQuotasForPeriod(Date.newInstance(2013, 3, 1), qc.quotaMap);
     	System.debug(ret);
     	
     	Boolean aFound = false;
@@ -71,15 +72,17 @@ private class QuotaControllTest {
     static testMethod void updateQuotas() {
     	String emaila = 'a@quota.com';
     	User a = createUser(emaila, 'ForecastingUser', TRUE);
-   		List<QuotaModel> ret = QuotaController.getQuotasForPeriod(Date.newInstance(2013, 3, 1), QuotaController.quotaMap);
+    	QuotaController qc = new QuotaController();
+   		List<QuotaModel> ret = qc.getQuotasForPeriod(Date.newInstance(2013, 3, 1), qc.quotaMap);
    		
    		for (QuotaModel qm : ret) {
    			qm.amount = 5555;
    		}
-   		QuotaController.setQuotas(ret);
-   		QuotaController.save();
+   		qc.setQuotas(ret);
+   		qc.save();
    		
-   		List<QuotaModel> ret2 = QuotaController.getQuotasForPeriod(Date.newInstance(2013, 3, 1), QuotaController.quotaMap);
+   		qc = new QuotaController();
+   		List<QuotaModel> ret2 = qc.getQuotasForPeriod(Date.newInstance(2013, 3, 1), qc.quotaMap);
    		for (QuotaModel qm : ret2) {
    			System.assertEquals(5555, qm.amount);
    		}
