@@ -2,7 +2,9 @@ public with sharing class QuotaController {
 	
 	Date startDate = CalendarUtil.getPeriodForNow();
 	
-	public static Date futureDate = CalendarUtil.getPeriodForNow();
+	public Date futureDate = CalendarUtil.getPeriodForNow();
+
+	public String isQuantityString = 'false';
 
 	static Id editUserId = null;
 	
@@ -48,32 +50,41 @@ public with sharing class QuotaController {
 		quotaMap.clear(); 
 	}
 	
-	public static String getFuturePeriod() {
+	public String getFuturePeriod() {
 		return futureDate.format();
 	}
 	
-	public static void setFuturePeriod(String futurePeriodStr) {
+	public void setFuturePeriod(String futurePeriodStr) {
 		Date inputDate = Date.parse(futurePeriodStr);
 		futureDate = Date.newInstance(inputDate.year(), inputDate.month(), inputDate.day());		
 	}
 
-	public static Id getEditUserId() {
+	public Id getEditUserId() {
 		return editUserId;
 	}
 	
-	public static void setEditUserId(Id ownerId) {
+	public void setEditUserId(Id ownerId) {
 		editUserId = ownerId;
 	}
-		
-
-//	static List<QuotaModel> quotas { get; set; }
 	
+	public String getIsQuantity() {
+		return isQuantityString;
+	}
+	
+	public void setIsQuantity(String str) {
+		isQuantityString = str;
+	}
+		
+	public Boolean isQuantity() {
+		return Boolean.valueOf(isQuantityString);
+	}
+
 	public QuotaController() {
 		getQuotas();
 	}
 	
 	// For testing
-	public static void setQuotas(List<QuotaModel> quotas) {
+	public void setQuotas(List<QuotaModel> quotas) {
 		quotaMap.clear();
 		for (QuotaModel q : quotas) {
 			Id userId = q.ownerId;
@@ -82,17 +93,16 @@ public with sharing class QuotaController {
 	}
 	
 	public List<QuotaModel> getQuotas() {
-//		setEditUserId(null);
 		if (!quotaMap.isEmpty()) {
 			List<QuotaModel> ret = quotaMap.values();
 			ret.sort();
 			return ret;
 		}
-		System.debug(loggingLevel.INFO, 'Fetching quotas for date=' + startDate);
+		System.debug(loggingLevel.INFO, 'Fetching quotas for date=' + startDate + ', isQuantity='+isQuantity());
 		return getQuotasForPeriod(startDate, quotaMap);
 	}
 	
-	public static List<QuotaModel> getQuotasForPeriod(Date startDate, Map<Id,QuotaModel> quotaMapForFetch) {
+	public List<QuotaModel> getQuotasForPeriod(Date startDate, Map<Id,QuotaModel> quotaMapForFetch) {
 
 		List<User> forecastUsers = new List<User>();
 		quotaMapForFetch.clear();
@@ -115,31 +125,40 @@ public with sharing class QuotaController {
 			quota.ownerName = user.Name;
 			quota.ownerId = user.Id;
 			quota.startDate = startDate;
+			quota.isQuantity = isQuantity();
 			quota.currencyIsoCode = isMultiCurrencyOrg ? CurrencyUtil.getUserDefaultCurrency(quota.OwnerId) : null;
 			quotaMapForFetch.put(user.Id, quota);
 		}
 		
 		Set<Id> userIds = quotaMapForFetch.keySet();
+		Boolean isQuant = isQuantity();
 		
 		// We have to use this clunky query creation, rather than using
 		// the [SELECT... ] method, because if we reference CurrencyIsoCode
 		// in a mono-currency org, we'll get a runtime error.
-		String query = 'SELECT Id, QuotaOwnerId, PeriodId, QuotaAmount';
+		String query = 'SELECT Id, QuotaOwnerId, PeriodId';
+		if (isQuantity()) {
+			query += ', QuotaQuantity';
+		}
+		else {
+			query += ', QuotaAmount';
+		}
 		if (isMultiCurrencyOrg)
 			query += ', CurrencyIsoCode';
 			
 		query += ' FROM ForecastingQuota WHERE QuotaOwnerId IN :userIds';
 		query += ' AND StartDate=:startDate';
+		query += ' AND isQuantity=:isQuant';
 						
 		List<SObject> quotasFromDB = Database.query(query);
 			
 		for (SObject sobj : quotasFromDB) {
 			Id userId = (Id) sobj.get('QuotaOwnerId');
-			QuotaModel quota = quotaMapForFetch.get(userId);
-						
+			QuotaModel quota = quotaMapForFetch.get(userId);			
 			quota.quotaId = sobj.Id;
 			quota.periodId = (String) sobj.get('PeriodId');
-			quota.amount = (Double) sobj.get('QuotaAmount');
+			quota.amount = (Double) sobj.get(isQuantity() ? 'QuotaQuantity' : 'QuotaAmount');
+			quota.isQuantity = isQuantity();
 			if (isMultiCurrencyOrg) {
 				quota.currencyIsoCode = (String) sobj.get('CurrencyIsoCode');
 			}				
@@ -149,15 +168,13 @@ public with sharing class QuotaController {
 		return ret;
 	}
 	
-	public static PageReference save() {
+	public PageReference save() {
 		PageReference ret = saveInternal(quotaMap.values());
 		quotaMap.clear();
 		return ret;
 	}
 	
-	private static PageReference saveInternal(List<QuotaModel> quotaModelList) {
-		
-//		setEditUserId(null);
+	private PageReference saveInternal(List<QuotaModel> quotaModelList) {
 		List<ForecastingQuota> quotasList = new List<ForecastingQuota>();
 		
 		for (QuotaModel q : quotaModelList) {
@@ -166,17 +183,25 @@ public with sharing class QuotaController {
 			// Don't save blank values. Look for objects where the ID and amount are null.
 			// No support for deleting quotas - if clearing out a prevoiusly-saved quota,
 			// then it's updated to a 0 quota.
-			if (q.quotaId == null && (q.amount == 0))
+			if (q.quotaId == null && (q.amount == null || q.amount == 0))
 				continue;
 			
-			ForecastingQuota fq = new ForecastingQuota(Id=q.quotaId, QuotaAmount=q.amount, QuotaOwnerId=q.ownerId, StartDate=q.startDate);
+			ForecastingQuota fq = new ForecastingQuota(Id=q.quotaId, 
+				QuotaOwnerId=q.ownerId, StartDate=q.startDate);
+			if (q.isQuantity) {
+				fq.QuotaQuantity = q.amount;
+			}
+			else {
+				fq.QuotaAmount = q.amount;
+			}
 			if (isMultiCurrencyOrg) {
 				// Necessary because referencing CurrencyIsoCode in a mono-currency org
 				// results in a runtime exception.
 				sObject sobj = fq;
 				sobj.put('CurrencyIsoCode', q.currencyIsoCode);				
 			}
-			System.debug('Going to save this quota: amount=' + fq.QuotaAmount + ', owner=' + fq.QuotaOwnerId);
+			System.debug('Going to save this quota: quantity=' + (q.isQuantity ? 'true' : 'false') + 
+				'amount=' + (q.isQuantity ? fq.QuotaQuantity : fq.QuotaAmount) + ', owner=' + fq.QuotaOwnerId);
 			quotasList.add(fq);
 		}
 		upsert quotasList;
@@ -187,8 +212,19 @@ public with sharing class QuotaController {
 		return CalendarUtil.getAvailableMonthlyPeriods();
 	}
 	
+	public static List<SelectOption> getQuantityOptions() {
+		List<SelectOption> ret = new List<SelectOption>();
+		ret.add(new SelectOption('true', 'Quantity'));
+		ret.add(new SelectOption('false', 'Revenue'));
+		return ret;
+	}
+	
+	public String getQuotaColumnHeader() {
+		return isQuantity() ? 'Quota (quantity)' : 'Quota (amount)';
+	}
+	
 	public boolean getRenderCurrencyColumn() {
-		return isMultiCurrencyOrg;
+		return isMultiCurrencyOrg && !isQuantity();
 	}
 	
 	public List<SelectOption> getAvailableIsoCodes() {
@@ -214,7 +250,7 @@ public with sharing class QuotaController {
 		return null;
     }
     
-    public static PageReference applyToPeriod() {
+    public PageReference applyToPeriod() {
     	// Get current period's quotas
     	List<QuotaModel> currentPeriodQuotas = quotaMap.values();
     	// Create new ones with the future start date
@@ -222,12 +258,8 @@ public with sharing class QuotaController {
     	for (QuotaModel m : currentPeriodQuotas) {
     		if (m.amount == null || m.amount == 0.0)
     			continue;
-    		QuotaModel m2 = new QuotaModel();
-    		m2.ownerName = m.ownerName;
-			m2.ownerId = m.ownerId;
+    		QuotaModel m2 = m.clone();
 			m2.startDate = futureDate;
-			m2.amount = m.amount;
-			m2.currencyIsoCode = m.currencyIsoCode;
     		futurePeriodQuotas.add(m2);
     	}
     	return saveInternal(futurePeriodQuotas);

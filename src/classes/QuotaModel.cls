@@ -6,7 +6,8 @@ global class QuotaModel implements Comparable {
 	public string currencyIsoCode {get; set; }
 	public date startDate {get; set; }
 	public string periodId {get; set; }
-	
+	public Boolean isQuantity { get; set; }
+		
 	public void setAmount(double amount) {
 		System.debug('Amount being set to ' + amount + ' for owner ' + ownerName);
 		this.amount = amount;
@@ -36,6 +37,5 @@ global class QuotaModel implements Comparable {
 	global Integer CompareTo(Object compareTo) {
 		QuotaModel compareToQuota = (QuotaModel) compareTo;
 		return this.ownerName.compareTo(compareToQuota.ownerName);
-	}
-	
+	}	
 }
