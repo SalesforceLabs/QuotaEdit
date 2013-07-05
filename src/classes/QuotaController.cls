@@ -209,7 +209,15 @@ public with sharing class QuotaController {
 	}
 		
 	public static List<SelectOption> getAvailablePeriods() {
-		return CalendarUtil.getAvailableMonthlyPeriods();
+		return CalendarUtil.getAvailableMonthlyPeriods(null);
+	}
+	
+	public List<SelectOption> getAvailablePeriodsForApplyFuture() {
+		return CalendarUtil.getAvailableMonthlyPeriods(startDate);
+	}
+	
+	public Boolean getIsApplyToPeriodDisabled() {
+		return futureDate.monthsBetween(startDate) == 0;
 	}
 	
 	public static List<SelectOption> getQuantityOptions() {
@@ -243,11 +251,10 @@ public with sharing class QuotaController {
         displayPopup = true;    
     }
 		
-	public PageReference editCell() {
+	public void editCell() {
 		Id paramId = ApexPages.currentPage().getParameters().get('editOwnerId');
 		System.debug(logginglevel.INFO, 'Called edit with userId=' + paramId);
 		setEditUserId(paramId);
-		return null;
     }
     
     public PageReference applyToPeriod() {

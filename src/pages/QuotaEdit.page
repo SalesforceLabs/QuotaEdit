@@ -1,16 +1,24 @@
 <apex:page controller="QuotaController">
 	<apex:form >
-		<apex:selectList value="{!startDatePeriod}" multiSelect="false" size="1">
-			<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
-			<apex:selectOptions value="{!availablePeriods}"/>
-		</apex:selectList>&nbsp;
-        <apex:selectRadio value="{!isQuantity}">
-			<apex:actionSupport event="onchange" reRender="quotaTable"/>
-            <apex:selectOptions value="{!quantityOptions}"/>
-        </apex:selectRadio>
-		<apex:actionStatus id="updatingStatus" startText=" (refreshing...)" stopText=""/>
-       	<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>
-		
+		<apex:panelGrid columns="3">
+		<apex:outputPanel >
+			<apex:outputText value="Period start date:"/>&nbsp;
+			<apex:selectList value="{!startDatePeriod}" multiSelect="false" size="1">
+				<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
+				<apex:selectOptions value="{!availablePeriods}"/>
+			</apex:selectList>&nbsp;
+		</apex:outputPanel>
+		<apex:outputPanel >
+	        <apex:selectRadio value="{!isQuantity}">
+				<apex:actionSupport event="onchange" reRender="quotaTable"/>
+	            <apex:selectOptions value="{!quantityOptions}"/>
+	        </apex:selectRadio>&nbsp;
+	     </apex:outputPanel>
+	     <apex:outputPanel >
+			<apex:actionStatus id="updatingStatus" startText=" (refreshing...)" stopText=""/>
+	       	<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>
+	     </apex:outputPanel>
+	     </apex:panelGrid>
 		<apex:outputText value="{!headerMessage}"/>
 	
 		<apex:outputPanel id="quarterlyPopup">
@@ -28,14 +36,14 @@
     <apex:form id="quotaTable">
         <apex:pageBlock id="pageBlock" title="Quotas for period starting {!startDatePeriod}">
             <apex:pageMessages />
-            <apex:pageBlockButtons >
+            <apex:pageBlockButtons id="pageBlockButtons">
                 <apex:commandButton value="Save" action="{!save}" disabled="{!saveDisabled}"/>
                 <br/>Copy this period's quota to ...
                 <apex:selectList value="{!futurePeriod}" multiSelect="false" size="1">
-					<!-- <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/> -->
-					<apex:selectOptions value="{!availablePeriods}"/>
+					<apex:actionSupport event="onchange" reRender="applyFutureButton"/>
+					<apex:selectOptions value="{!availablePeriodsForApplyFuture}"/>
 				</apex:selectList>&nbsp;
-                <apex:commandButton value="OK" action="{!applyToPeriod}" />
+                <apex:commandButton id="applyFutureButton" value="OK" disabled="{!isApplyToPeriodDisabled}" action="{!applyToPeriod}" />
             </apex:pageBlockButtons>
     		<apex:pageBlockTable id="pageBlockTable" style="width:350px" value="{!quotas}" var="q">
  		        	<apex:column id="nameColumn" headerValue="Name">
@@ -46,7 +54,7 @@
 	        			<apex:inputText id="quotaInput" size="11" value="{!q.amount}"
  	        				rendered="{!ISNULL(q.amount) || q.ownerId == editUserId}"/>
  	        			<apex:commandLink id="quotaOutput" action="{!editCell}" value="{!q.amountString}" 
-	        				rendered="{!q.ownerId != editUserId}" style="color:blue">
+	        				rendered="{!q.ownerId != editUserId}" style="color:blue;text-decoration:none">
 <!--          					rerender="quotaColumn">  -->
 	        				<apex:param name="editOwnerId" value="{!q.ownerId}"/>
 						</apex:commandLink>

@@ -1,15 +1,20 @@
 public with sharing class CalendarUtil {
 
-	public static List<SelectOption> getAvailableMonthlyPeriods() {
+	public static List<SelectOption> getAvailableMonthlyPeriods(Date startDateToDisable) {
 		Date today = Date.today();
 		List<SelectOption> options = new List<SelectOption>();
-		
+
 		List<Period> periods = [SELECT StartDate FROM Period WHERE EndDate > :today AND Type='Month' ORDER BY StartDate];
 		if (periods == null || periods.size() == 0)
 			return options;
 		
+		
 		for (Period p : periods) {
-			options.add(new SelectOption(p.StartDate.format(), p.StartDate.format()));
+			SelectOption o = new SelectOption(p.StartDate.format(), p.StartDate.format());
+			if (startDateToDisable != null && p.StartDate.daysBetween(startDateToDisable) == 0) {
+				o.setDisabled(True);		
+			}
+			options.add(o);
 		}
 		return options;
 	}
