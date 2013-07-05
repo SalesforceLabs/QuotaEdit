@@ -260,16 +260,17 @@ public with sharing class QuotaController {
     public PageReference applyToPeriod() {
     	// Get current period's quotas
     	List<QuotaModel> currentPeriodQuotas = quotaMap.values();
-    	// Create new ones with the future start date
-    	List<QuotaModel> futurePeriodQuotas = new List<QuotaModel>();
+    	
+    	// Get any saved quotas for the future period
+    	Map<Id,QuotaModel> quotasForFuture = new Map<Id,QuotaModel>();
+    	getQuotasForPeriod(futureDate, quotasForFuture);
+    	
+    	// Modify future period's quotas with this period's numbers
     	for (QuotaModel m : currentPeriodQuotas) {
-    		if (m.amount == null || m.amount == 0.0)
-    			continue;
-    		QuotaModel m2 = m.clone();
-			m2.startDate = futureDate;
-    		futurePeriodQuotas.add(m2);
+    		QuotaModel m2 = quotasForFuture.get(m.ownerId);
+    		m2.amount = m.amount;
     	}
-    	return saveInternal(futurePeriodQuotas);
+    	return saveInternal(quotasForFuture.values());
     }
 	
 	
