@@ -1,4 +1,16 @@
 <apex:page controller="QuotaController">
+	
+    <script type="text/javascript">
+    	// Hide the output component (the param). 
+    	// Find the correspodning input component (same index in the ID)
+    	// Show the input component.
+        function tryHide(component) {
+			component.style.display = "none";
+			var outputComponentId = component.id.replace("quotaOutput","quotaInput");
+			document.getElementById(outputComponentId).style.display = "inline";        	
+        }
+    </script>
+
 	<apex:form >
 		<apex:panelGrid columns="3">
 		<apex:outputPanel >
@@ -52,11 +64,9 @@
 
  	        		<apex:column id="quotaColumn" headerValue="{!quotaColumnHeader}" style="width:100px;height:20px">
 	        			<apex:inputText id="quotaInput" size="11" value="{!q.amount}"
- 	        				rendered="{!ISNULL(q.amount) || q.ownerId == editUserId}"/>
- 	        			<apex:commandLink id="quotaOutput" action="{!editCell}" value="{!q.amountString}" 
-	        				rendered="{!q.ownerId != editUserId}" style="color:blue;text-decoration:none">
-<!--          					rerender="quotaColumn">  -->
-	        				<apex:param name="editOwnerId" value="{!q.ownerId}"/>
+	        				style="display:{!IF(ISNULL(q.amount),'inline','none')}"/>
+ 	        			<apex:commandLink id="quotaOutput" onclick="{tryHide(this)}" value="{!q.amountString}" rerender="none" 
+	        				style="color:blue;text-decoration:none;display:{!IF(NOT(ISNULL(q.amount)),'inline','none')}">
 						</apex:commandLink>
         			        			
          			</apex:column>

@@ -6,8 +6,6 @@ public with sharing class QuotaController {
 
 	public String isQuantityString = 'false';
 
-	static Id editUserId = null;
-	
 	public Map<Id,QuotaModel> quotaMap = new Map<Id,QuotaModel>();
 	
 	
@@ -55,18 +53,11 @@ public with sharing class QuotaController {
 	}
 	
 	public void setFuturePeriod(String futurePeriodStr) {
+		if (futurePeriodStr == null) return;
 		Date inputDate = Date.parse(futurePeriodStr);
 		futureDate = Date.newInstance(inputDate.year(), inputDate.month(), inputDate.day());		
 	}
 
-	public Id getEditUserId() {
-		return editUserId;
-	}
-	
-	public void setEditUserId(Id ownerId) {
-		editUserId = ownerId;
-	}
-	
 	public String getIsQuantity() {
 		return isQuantityString;
 	}
@@ -251,12 +242,6 @@ public with sharing class QuotaController {
         displayPopup = true;    
     }
 		
-	public void editCell() {
-		Id paramId = ApexPages.currentPage().getParameters().get('editOwnerId');
-		System.debug(logginglevel.INFO, 'Called edit with userId=' + paramId);
-		setEditUserId(paramId);
-    }
-    
     public PageReference applyToPeriod() {
     	// Get current period's quotas
     	List<QuotaModel> currentPeriodQuotas = quotaMap.values();
