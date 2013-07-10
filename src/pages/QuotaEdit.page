@@ -9,6 +9,12 @@
 			var outputComponentId = component.id.replace("quotaOutput","quotaInput");
 			document.getElementById(outputComponentId).style.display = "inline";        	
         }
+        
+        function pencil(component, showhide) {
+        	var pencilIconId = component.id.replace("quotaOutput","pencilIcon");
+        	document.getElementById(pencilIconId).style.display = showhide;
+        }
+        
     </script>
 
 	<apex:form >
@@ -62,13 +68,16 @@
 		        		<apex:outputText value="{!q.ownerName}" style="width:150px"/>
 		        	</apex:column>
 
- 	        		<apex:column id="quotaColumn" headerValue="{!quotaColumnHeader}" style="width:100px;height:20px">
+ 	        		<apex:column id="quotaColumn" headerValue="{!quotaColumnHeader}" style="width:110px;height:20px">
+ 	        			<apex:outputPanel >
 	        			<apex:inputText id="quotaInput" size="11" value="{!q.amount}"
 	        				style="display:{!IF(ISNULL(q.amount),'inline','none')}"/>
  	        			<apex:commandLink id="quotaOutput" onclick="{tryHide(this)}" value="{!q.amountString}" rerender="none" 
-	        				style="color:blue;text-decoration:none;display:{!IF(NOT(ISNULL(q.amount)),'inline','none')}">
+	        				style="color:blue;text-decoration:none;display:{!IF(NOT(ISNULL(q.amount)),'inline','none')}"
+	        				onmouseover="{pencil(this,'inline')}" onmouseout="{pencil(this,'none')}">
 						</apex:commandLink>
-        			        			
+						<apex:image id="pencilIcon" value="/img/func_icons/util/pencil12.gif" style="display:none"/>
+        			    </apex:outputPanel>    			
          			</apex:column>
  	        		<apex:column id="currencyColumn" headerValue="Currency" style="width:100px" rendered="{!RenderCurrencyColumn}">
 	        			<apex:selectList value="{!q.currencyIsoCode}" multiSelect="false" size="1">
