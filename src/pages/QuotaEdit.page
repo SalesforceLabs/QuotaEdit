@@ -76,7 +76,9 @@
 	        				style="color:blue;text-decoration:none;display:{!IF(NOT(ISNULL(q.amount)),'inline','none')}"
 	        				onmouseover="{pencil(this,'inline')}" onmouseout="{pencil(this,'none')}">
 						</apex:commandLink>
+						<apex:outputPanel style="float:right">
 						<apex:image id="pencilIcon" value="/img/func_icons/util/pencil12.gif" style="display:none"/>
+						</apex:outputPanel>
         			    </apex:outputPanel>    			
          			</apex:column>
  	        		<apex:column id="currencyColumn" headerValue="Currency" style="width:100px" rendered="{!RenderCurrencyColumn}">
