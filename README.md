@@ -35,8 +35,6 @@ Version 0.1 - 2013-03-14
 
 Known issues
 ------------
-* Whole number quotas appear was only one digit after the period, for example 
-  USD 123.0 
-  
+* See https://git.soma.salesforce.com/akama/QuotaEdit/issues?state=open
 
   
