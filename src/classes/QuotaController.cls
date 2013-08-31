@@ -174,7 +174,7 @@ public with sharing class QuotaController {
 			// Don't save blank values. Look for objects where the ID and amount are null.
 			// No support for deleting quotas - if clearing out a prevoiusly-saved quota,
 			// then it's updated to a 0 quota.
-			if (q.quotaId == null && (q.amount == null || q.amount == 0))
+			if (q.quotaId == null && (q.amount == null || q.amount == 0 || q.amount == 0.0))
 				continue;
 			
 			ForecastingQuota fq = new ForecastingQuota(Id=q.quotaId, 
