@@ -219,7 +219,7 @@ public with sharing class QuotaController {
 	}
 	
 	public String getQuotaColumnHeader() {
-		return isQuantity() ? 'Quota (quantity)' : 'Quota (amount)';
+		return isQuantity() ? 'Quota (Units)' : 'Quota (amount)';
 	}
 	
 	public boolean getRenderCurrencyColumn() {
