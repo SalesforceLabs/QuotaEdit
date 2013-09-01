@@ -18,7 +18,8 @@
     </script>
 
 	<apex:form >
-		<apex:panelGrid columns="3">
+      	<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>
+		<apex:panelGrid columns="2">
 		<apex:outputPanel >
 			<apex:outputText value="Period start date:"/>&nbsp;
 			<apex:selectList value="{!startDatePeriod}" multiSelect="false" size="1">
@@ -34,7 +35,6 @@
 	     </apex:outputPanel>
 	     <apex:outputPanel >
 			<apex:actionStatus id="updatingStatus" startText=" (refreshing...)" stopText=""/>
-	       	<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>
 	     </apex:outputPanel>
 	     </apex:panelGrid>
 		<apex:outputText value="{!headerMessage}"/>
