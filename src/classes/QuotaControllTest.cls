@@ -90,4 +90,69 @@ private class QuotaControllTest {
     }
     
     
+    static testMethod void testForecastingEnabled() {
+    	Id userId = Id.valueOf(UserInfo.getUserId());
+    	User u = [select ForecastEnabled from User where Id=:userId];
+    	u.ForecastEnabled = true;
+    	update u;
+    	System.assert(PermUtil.hasForecastingEnabled());
+    }
+    
+    static testMethod void testGetAvailableMonthlyPeriods() {
+    	CalendarUtil.getAvailableMonthlyPeriods(Date.today());
+    }
+    
+    static testMethod void testGetAvailableIsoCodes() {
+    	if (!CurrencyUtil.isMultiCurrencyOrg())
+    		return;
+    	List<SelectOption> currencies = CurrencyUtil.getAvailableIsoCodes();
+    	System.assert(currencies != null && currencies.size() > 0);
+    	
+    	String userCurrency = CurrencyUtil.getUserDefaultCurrency(Id.valueOf(UserInfo.getUserId()));
+    	System.assert(userCurrency != null && userCurrency.length() > 0);
+    	boolean found = false;
+    	for (Selectoption option : currencies) {
+    		if (option.getValue().equals(userCurrency))
+				found = true;
+    	}
+    	System.assert(found);
+    }    
+    
+    static testMethod void testQuotaModelStr() {
+    	QuotaModel qm = new QuotaModel();
+    	qm.setAmount(1234);
+    	qm.getAmountString();
+    	// won't work for foreign locales
+    	// System.assert(qm.getAmountString().equals('1,234.00'));
+    	qm.amount = 52.3;
+    	//System.assert(qm.getAmountString().equals('52.30'));   	
+    }
+    
+    static testMethod void testHeaderMessage() {
+    	String ret = QuotaController.getHeaderMessage();
+    }
+    
+    static testMethod void testSaveDisabled() {
+  		Boolean b = QuotaController.getSaveDisabled();
+    }  
+    
+    static testMethod void testMiscGetSet() {
+    	QuotaController qc = new QuotaController();
+    	qc.setStartDatePeriod(Date.today().format());
+    	qc.getStartDatePeriod();
+    	qc.setFuturePeriod(Date.today().format());
+    	qc.getFuturePeriod();
+    	qc.setIsQuantity('true');
+    	qc.getIsQuantity();
+    	qc.getAvailablePeriodsForApplyFuture();
+    	QuotaController.getAvailablePeriods();
+    	qc.getIsApplyToPeriodDisabled();
+    	QuotaController.getQuantityOptions();
+    	qc.getQuotaColumnHeader();
+    	qc.getRenderCurrencyColumn();
+    	qc.getAvailableIsoCodes();
+    	qc.showPopup();
+    	qc.closePopup();
+    }
+    
 }
