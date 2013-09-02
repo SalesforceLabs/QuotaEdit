@@ -120,8 +120,13 @@ private class QuotaControllTest {
     
     static testMethod void testQuotaModelStr() {
     	QuotaModel qm = new QuotaModel();
-    	qm.setAmount(1234);
+    	System.assert(qm.getAmountString() == null);
+    	double amount = 1234.0;
+    	qm.setAmount(amount);
     	qm.getAmountString();
+    	System.assert(qm.getAmount() == amount);
+    	
+    	
     	// won't work for foreign locales
     	// System.assert(qm.getAmountString().equals('1,234.00'));
     	qm.amount = 52.3;
@@ -153,6 +158,5 @@ private class QuotaControllTest {
     	qc.getAvailableIsoCodes();
     	qc.showPopup();
     	qc.closePopup();
-    }
-    
+    }    
 }
