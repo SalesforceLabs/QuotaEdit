@@ -160,7 +160,20 @@ public with sharing class QuotaController {
 	}
 	
 	public PageReference save() {
-		PageReference ret = saveInternal(quotaMap.values());
+		PageReference ret = null;
+		try {
+			ret = saveInternal(quotaMap.values());
+		}
+        catch(System.DMLException ex) {
+        	// Can't tell if Quantity is not enabled for this org, so need to rely
+        	// on runtime exceptions.
+            if (StatusCode.INVALID_FIELD_FOR_INSERT_UPDATE == ex.getDmlType(0)
+                && ex.getDmlFields(0).get(0).getDescribe().getName().equals('QuotaQuantity')) {
+               }
+            else {
+                throw ex;
+            }
+        }
 		quotaMap.clear();
 		return ret;
 	}
