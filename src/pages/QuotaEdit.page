@@ -32,8 +32,6 @@
 				<apex:actionSupport event="onchange" reRender="quotaTable"/>
 	            <apex:selectOptions value="{!quantityOptions}"/>
 	        </apex:selectRadio>&nbsp;
-	     </apex:outputPanel>
-	     <apex:outputPanel >
 			<apex:actionStatus id="updatingStatus" startText=" (refreshing...)" stopText=""/>
 	     </apex:outputPanel>
 	     </apex:panelGrid>
