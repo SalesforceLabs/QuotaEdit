@@ -170,6 +170,10 @@ public with sharing class QuotaController {
             if (StatusCode.INVALID_FIELD_FOR_INSERT_UPDATE == ex.getDmlType(0)
                 && ex.getDmlFields(0).get(0).getDescribe().getName().equals('QuotaQuantity')) {
                }
+            else if (StatusCode.DUPLICATE_VALUE == ex.getDmlType(0)) {
+				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
+					'If Quarterly Forecasting is enabled, please edit the quota using the start month only.'));
+            }
             else {
                 throw ex;
             }
