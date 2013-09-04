@@ -8,7 +8,7 @@ Version 1.2 - 2013-09-03
 ------------------------
 
 * Edit Quotas is a managed app for viewing and editing quotas. Check out the 
-  AppExchange listing [[here/https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ]]. 
+  AppExchange listing (here)[https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ]. 
   
 * Access to quotas is governed by the following:
   - Full read/write to all forecasts for those with View All Forecasts and 
@@ -33,12 +33,6 @@ Version 1.2 - 2013-09-03
 
 Known issues
 ------------
-<<<<<<< HEAD
 * In edit mode, quotas that are whole number quotas will appear with only one digit after the period, for example 
   USD 123.0 
-  
-=======
-* See https://git.soma.salesforce.com/akama/QuotaEdit/issues?state=open
->>>>>>> 05e2c459a97a050c7fe8423f5858e78edf782e94
-
   
