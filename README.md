@@ -1,23 +1,21 @@
-QuotaEdit
-=========
+Edit Quotas
+===========
 
 UI for viewing and editing quotas for Collaborative Forecasting
 [[QuotaEdit/QuotaUI.png]]
 
-Version 0.1 - 2013-03-14
+Version 1.2 - 2013-09-03
 ------------------------
 
-* quotaEdit page is the VisualForce page for viewing and editing quotas. Users
-  who view this page should be API Enabled and their profile should have this
-  page selected under the "Enabled Visualforce Page Access" section.
+* Edit Quotas is a managed app for viewing and editing quotas. Check out the 
+  AppExchange listing [[here/https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ]]. 
   
-* A person visiting this page can view the forecast for any given month in the
-  next two years. A status message will indicate their access: 
-       - Full read/write to all forecasts for those with View All Forecasts and 
-         Manage Quotas perm
-  	 - Full read/write to subordinate quotas only for those with Manage Quotas
-  	   perm
-  	   - Read only for subordinate quotas for those without the Manage Quotas perm
+* Access to quotas is governed by the following:
+  - Full read/write to all forecasts for those with View All Forecasts and 
+    Manage Quotas perm
+  - Full read/write to subordinate quotas only for those with Manage Quotas
+    perm
+  - Read only for subordinate quotas for those without the Manage Quotas perm
  
 * For orgs with quarterly forecasts, a help message explains how to enter them 
   in the monthly view.
@@ -35,7 +33,7 @@ Version 0.1 - 2013-03-14
 
 Known issues
 ------------
-* Whole number quotas appear was only one digit after the period, for example 
+* In edit mode, quotas that are whole number quotas will appear with only one digit after the period, for example 
   USD 123.0 
   
 
