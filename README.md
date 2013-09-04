@@ -2,7 +2,7 @@ Edit Quotas
 ===========
 
 UI for viewing and editing quotas for Collaborative Forecasting
-[[QuotaEdit/QuotaUI.png]]
+[[/QuotaEdit/QuotaUI.png]]
 
 Version 1.2 - 2013-09-03
 ------------------------
@@ -33,8 +33,12 @@ Version 1.2 - 2013-09-03
 
 Known issues
 ------------
+<<<<<<< HEAD
 * In edit mode, quotas that are whole number quotas will appear with only one digit after the period, for example 
   USD 123.0 
   
+=======
+* See https://git.soma.salesforce.com/akama/QuotaEdit/issues?state=open
+>>>>>>> 05e2c459a97a050c7fe8423f5858e78edf782e94
 
   

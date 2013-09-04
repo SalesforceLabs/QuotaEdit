@@ -50,8 +50,9 @@ private class QuotaControllTest {
     	User a = createUser(emaila, 'ForecastingUser', TRUE);
     	
     	User b = createUser('b@quota.com', 'Non-ForecastingUser', FALSE);
+    	QuotaController qc = new QuotaController();
     	
-    	List<QuotaModel> ret = QuotaController.getQuotasForPeriod(Date.newInstance(2013, 3, 1));
+    	List<QuotaModel> ret = qc.getQuotasForPeriod(Date.newInstance(2013, 3, 1), qc.quotaMap);
     	System.debug(ret);
     	
     	Boolean aFound = false;
@@ -71,15 +72,17 @@ private class QuotaControllTest {
     static testMethod void updateQuotas() {
     	String emaila = 'a@quota.com';
     	User a = createUser(emaila, 'ForecastingUser', TRUE);
-   		List<QuotaModel> ret = QuotaController.getQuotasForPeriod(Date.newInstance(2013, 3, 1));
+    	QuotaController qc = new QuotaController();
+   		List<QuotaModel> ret = qc.getQuotasForPeriod(Date.newInstance(2013, 3, 1), qc.quotaMap);
    		
    		for (QuotaModel qm : ret) {
    			qm.amount = 5555;
    		}
-   		QuotaController.setQuotas(ret);
-   		QuotaController.save();
+   		qc.setQuotas(ret);
+   		qc.save();
    		
-   		List<QuotaModel> ret2 = QuotaController.getQuotasForPeriod(Date.newInstance(2013, 3, 1));
+   		qc = new QuotaController();
+   		List<QuotaModel> ret2 = qc.getQuotasForPeriod(Date.newInstance(2013, 3, 1), qc.quotaMap);
    		for (QuotaModel qm : ret2) {
    			System.assertEquals(5555, qm.amount);
    		}
@@ -87,4 +90,73 @@ private class QuotaControllTest {
     }
     
     
+    static testMethod void testForecastingEnabled() {
+    	Id userId = Id.valueOf(UserInfo.getUserId());
+    	User u = [select ForecastEnabled from User where Id=:userId];
+    	u.ForecastEnabled = true;
+    	update u;
+    	System.assert(PermUtil.hasForecastingEnabled());
+    }
+    
+    static testMethod void testGetAvailableMonthlyPeriods() {
+    	CalendarUtil.getAvailableMonthlyPeriods(Date.today());
+    }
+    
+    static testMethod void testGetAvailableIsoCodes() {
+    	if (!CurrencyUtil.isMultiCurrencyOrg())
+    		return;
+    	List<SelectOption> currencies = CurrencyUtil.getAvailableIsoCodes();
+    	System.assert(currencies != null && currencies.size() > 0);
+    	
+    	String userCurrency = CurrencyUtil.getUserDefaultCurrency(Id.valueOf(UserInfo.getUserId()));
+    	System.assert(userCurrency != null && userCurrency.length() > 0);
+    	boolean found = false;
+    	for (Selectoption option : currencies) {
+    		if (option.getValue().equals(userCurrency))
+				found = true;
+    	}
+    	System.assert(found);
+    }    
+    
+    static testMethod void testQuotaModelStr() {
+    	QuotaModel qm = new QuotaModel();
+    	System.assert(qm.getAmountString() == null);
+    	double amount = 1234.0;
+    	qm.setAmount(amount);
+    	qm.getAmountString();
+    	System.assert(qm.getAmount() == amount);
+    	
+    	
+    	// won't work for foreign locales
+    	// System.assert(qm.getAmountString().equals('1,234.00'));
+    	qm.amount = 52.3;
+    	//System.assert(qm.getAmountString().equals('52.30'));   	
+    }
+    
+    static testMethod void testHeaderMessage() {
+    	String ret = QuotaController.getHeaderMessage();
+    }
+    
+    static testMethod void testSaveDisabled() {
+  		Boolean b = QuotaController.getSaveDisabled();
+    }  
+    
+    static testMethod void testMiscGetSet() {
+    	QuotaController qc = new QuotaController();
+    	qc.setStartDatePeriod(Date.today().format());
+    	qc.getStartDatePeriod();
+    	qc.setFuturePeriod(Date.today().format());
+    	qc.getFuturePeriod();
+    	qc.setIsQuantity('true');
+    	qc.getIsQuantity();
+    	qc.getAvailablePeriodsForApplyFuture();
+    	QuotaController.getAvailablePeriods();
+    	qc.getIsApplyToPeriodDisabled();
+    	QuotaController.getQuantityOptions();
+    	qc.getQuotaColumnHeader();
+    	qc.getRenderCurrencyColumn();
+    	qc.getAvailableIsoCodes();
+    	qc.showPopup();
+    	qc.closePopup();
+    }    
 }

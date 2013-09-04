@@ -1,30 +1,35 @@
 public with sharing class CalendarUtil {
 
-	private static String[] months = new String[] {'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'};
-
-	// Expecting a number between 1 and 12
-	public static String getMonthName(integer m) {
-		if (m < 1 || m > 12)
-			return null;
-		else return months[m-1];
-	}
-	
-	public static List<SelectOption> getAvailableMonths() {
+	public static List<SelectOption> getAvailableMonthlyPeriods(Date startDateToDisable) {
+		// Until quarterly forecasting is detected, we may need to also
+		// return the two prior months. For example, if now is August
+		// and we want to set the quota for Q3 (starts in July), we 
+		// need the period that starts July 1.
+		Date startDate = Date.today().addMonths(-2);
 		List<SelectOption> options = new List<SelectOption>();
-		for (Integer i = 1; i <= 12; i++) {
-			options.add(new SelectOption(String.valueOf(i), months[i-1]));	
-		}	
+		
+
+		List<Period> periods = [SELECT StartDate FROM Period WHERE EndDate > :startDate AND Type='Month' ORDER BY StartDate];
+		if (periods == null || periods.size() == 0)
+			return options;
+		
+		
+		for (Period p : periods) {
+			SelectOption o = new SelectOption(p.StartDate.format(), p.StartDate.format());
+			if (startDateToDisable != null && p.StartDate.daysBetween(startDateToDisable) == 0) {
+				o.setDisabled(True);		
+			}
+			options.add(o);
+		}
 		return options;
 	}
 	
-	public static List<SelectOption> getAvailableYears() {
-		List<SelectOption> options = new List<SelectOption>();
-		String y = String.valueOf(Date.today().year());
-        options.add(new Selectoption(y,y));
-        y = String.valueOf(Date.today().year()+1);
-        options.add(new Selectoption(y,y));
-		return options;		
+	public static Date getPeriodForNow() {
+		Date today = Date.today();
+		List<Period> periods = [SELECT StartDate FROM Period Where EndDate >= :today AND StartDate <= :today ORDER BY StartDate DESC LIMIT 1];
+		if (periods == null || periods.size() == 0)
+			return today;
+		return periods.get(0).StartDate;
 	}
-	
 	
 }

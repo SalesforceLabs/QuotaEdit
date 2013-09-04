@@ -14,5 +14,9 @@
         <members>QuotaEdit</members>
         <name>ApexPage</name>
     </types>
-    <version>26.0</version>
+    <types>
+        <members>Edit_Quotas</members>
+        <name>CustomTab</name>
+    </types>
+    <version>28.0</version>
 </Package>

@@ -25,10 +25,8 @@ public with sharing class CurrencyUtil {
 	public static String getUserDefaultCurrency(Id userId) {
 		if (userDefaultCurrency == null) {
 			// Can't use SOQL bracket syntax because it will not compile on mono-currency orgs
-			String query = 'SELECT DefaultCurrencyIsoCode FROM User WHERE Id=:userId';
-			List<SObject> res = Database.query(query);
-			System.assert(res.size() == 1);
-			userDefaultCurrency = (String)res.get(0).get('DefaultCurrencyIsoCode');
+			List<SObject> res = Database.query('SELECT DefaultCurrencyIsoCode FROM User WHERE Id=:userId');
+			userDefaultCurrency = res.size() == 1 ? (String)res.get(0).get('DefaultCurrencyIsoCode') : null;
 		}
 		return userDefaultCurrency;		
 	}
