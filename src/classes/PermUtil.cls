@@ -1,4 +1,4 @@
-public with sharing class PermUtil {
+public class PermUtil {
 
 	private static boolean manageQuotas = null;
 	private static boolean viewAllForecasts = null;
@@ -25,8 +25,8 @@ public with sharing class PermUtil {
 	}
 	
 	public static boolean hasForecastingEnabled() {
-		Id userId = Id.valueOf(UserInfo.getUserId());
 		if (forecastingEnabled == null) {
+			Id userId = Id.valueOf(UserInfo.getUserId());
 			List<User> b = [SELECT ForecastEnabled from User WHERE Id=:userId];
 			forecastingEnabled = (b != null && b.size() > 0) ? b.get(0).ForecastEnabled : false;	
 		}
