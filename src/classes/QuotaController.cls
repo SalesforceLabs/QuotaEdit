@@ -263,10 +263,7 @@ public with sharing class QuotaController {
 	}
 	
 	public static List<SelectOption> getProductFamilies() {
-		List<SelectOption> ret = new List<SelectOption>();
-		ret.add(new SelectOption('Sales Cloud', 'Sales Cloud'));
-		ret.add(new SelectOption('Service Cloud', 'Service Cloud'));
-		return ret;
+		return ProductFamilyUtil.getActiveProductFamilies();
 	}
 	
 	
