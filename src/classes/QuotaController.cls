@@ -8,6 +8,9 @@ public with sharing class QuotaController {
 
 	public Map<Id,QuotaModel> quotaMap = new Map<Id,QuotaModel>();
 	
+	public String isPFCheckbox = 'false';
+	public String selectedPFString = '';
+	
 	
 	public static String getHeaderMessage() {
 		// If showing all quotas
@@ -69,6 +72,28 @@ public with sharing class QuotaController {
 	public Boolean isQuantity() {
 		return Boolean.valueOf(isQuantityString);
 	}
+	
+	public String getIsProductFamily() {
+		return isPFCheckbox;
+	}
+	
+	public void setIsProductFamily(String isPFChecked) {
+		isPFCheckbox = isPFChecked;
+	}
+	
+	public Boolean getIsProductFamilyChecked() {
+		return Boolean.valueOf(isPFCheckbox);
+	}
+	
+	public String getSelectedProductFamily() {
+		return selectedPFString;
+	}
+	
+	public void setSelectedProductFamily(String str) {
+		selectedPFString = str;
+	}
+	
+	
 
 	public QuotaController() {
 		getQuotas();
@@ -224,6 +249,8 @@ public with sharing class QuotaController {
 		return CalendarUtil.getAvailableMonthlyPeriods(startDate);
 	}
 	
+	
+	
 	public Boolean getIsApplyToPeriodDisabled() {
 		return futureDate.monthsBetween(startDate) == 0;
 	}
@@ -234,6 +261,15 @@ public with sharing class QuotaController {
 		ret.add(new SelectOption('false', 'Revenue'));
 		return ret;
 	}
+	
+	public static List<SelectOption> getProductFamilies() {
+		List<SelectOption> ret = new List<SelectOption>();
+		ret.add(new SelectOption('Sales Cloud', 'Sales Cloud'));
+		ret.add(new SelectOption('Service Cloud', 'Service Cloud'));
+		return ret;
+	}
+	
+	
 	
 	public String getQuotaColumnHeader() {
 		return isQuantity() ? 'Quota (Units)' : 'Quota (amount)';
