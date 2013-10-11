@@ -5,6 +5,7 @@ public class ProductFamilyUtil {
 		List<Schema.PicklistEntry> entries = f.getPicklistValues();
 		List<SelectOption> ret = new List<SelectOption>();
 		
+		ret.add(new SelectOption('','Products not categorized'));
 		for (Schema.Picklistentry entry : entries) {
 			ret.add(new SelectOption(entry.getValue(), entry.getLabel()));
 		}

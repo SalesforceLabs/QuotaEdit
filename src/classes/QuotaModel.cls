@@ -7,6 +7,7 @@ global class QuotaModel implements Comparable {
 	public date startDate {get; set; }
 	public string periodId {get; set; }
 	public Boolean isQuantity { get; set; }
+	public string productFamily {get; set; }
 		
 	public void setAmount(double amount) {
 		System.debug('Amount being set to ' + amount + ' for owner ' + ownerName);

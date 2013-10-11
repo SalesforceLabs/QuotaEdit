@@ -37,7 +37,8 @@
 	    <apex:outputPanel>
 	     	<apex:outputText value="Product Family quotas?"/>
 	     	<apex:inputCheckbox value="{!isProductFamily}">
-	     		<apex:actionSupport event="onchange" reRender="productFamilyList"/>
+	     		<apex:actionSupport event="onclick" action="{!onCheckProductFamily}" reRender="productFamilyList" status="updatingStatus"/>
+				<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>	     		
 			</apex:inputCheckbox>&nbsp;	     	
 	     	<apex:selectList value="{!selectedProductFamily}" id="productFamilyList" multiSelect="false" size="1" disabled="{!NOT(isProductFamilyChecked)}">
 				<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>

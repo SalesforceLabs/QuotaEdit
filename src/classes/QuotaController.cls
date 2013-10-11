@@ -11,6 +11,11 @@ public with sharing class QuotaController {
 	public String isPFCheckbox = 'false';
 	public String selectedPFString = '';
 	
+	public void onCheckProductFamily() {
+		if (isPFCheckbox.equals('false'))
+			selectedPFString = '';
+	}
+	
 	
 	public static String getHeaderMessage() {
 		// If showing all quotas
@@ -143,11 +148,13 @@ public with sharing class QuotaController {
 			quota.startDate = startDate;
 			quota.isQuantity = isQuantity();
 			quota.currencyIsoCode = isMultiCurrencyOrg ? CurrencyUtil.getUserDefaultCurrency(quota.OwnerId) : null;
+			quota.productFamily = getIsProductFamilyChecked() ? selectedPFString : null;
 			quotaMapForFetch.put(user.Id, quota);
 		}
 		
 		Set<Id> userIds = quotaMapForFetch.keySet();
 		Boolean isQuant = isQuantity();
+		String productFamilyStr = selectedPFString;
 		
 		// We have to use this clunky query creation, rather than using
 		// the [SELECT... ] method, because if we reference CurrencyIsoCode
@@ -165,7 +172,14 @@ public with sharing class QuotaController {
 		query += ' FROM ForecastingQuota WHERE QuotaOwnerId IN :userIds';
 		query += ' AND StartDate=:startDate';
 		query += ' AND isQuantity=:isQuant';
-						
+		
+		if (getIsProductFamilyChecked()) {
+			query += ' AND ProductFamily=:productFamilyStr';
+		}
+		else {
+			query += ' AND ProductFamily=\'\'';
+		}
+		
 		List<SObject> quotasFromDB = Database.query(query);
 			
 		for (SObject sobj : quotasFromDB) {
@@ -199,6 +213,8 @@ public with sharing class QuotaController {
 				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
 					'If Quarterly Forecasting is enabled, please edit the quota using the start month only.'));
             }
+            else if (ex.getMessage().contains('unless Product Families for Forecasting is enabled')) {
+            }
             else {
                 throw ex;
             }
@@ -227,6 +243,10 @@ public with sharing class QuotaController {
 			else {
 				fq.QuotaAmount = q.amount;
 			}
+			if (q.productFamily != null) {
+				fq.ProductFamily = q.productFamily;
+			}
+			
 			if (isMultiCurrencyOrg) {
 				// Necessary because referencing CurrencyIsoCode in a mono-currency org
 				// results in a runtime exception.
