@@ -33,7 +33,6 @@
 	            <apex:selectOptions value="{!quantityOptions}"/>
 	        </apex:selectRadio>&nbsp;
 	    </apex:outputPanel>
-	     
 	    <apex:outputPanel>
 	     	<apex:outputText value="Product Family quotas?"/>
 	     	<apex:inputCheckbox value="{!isProductFamily}">
