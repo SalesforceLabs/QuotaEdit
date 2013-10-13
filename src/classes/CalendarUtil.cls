@@ -1,11 +1,8 @@
 public with sharing class CalendarUtil {
 
 	public static List<SelectOption> getAvailableMonthlyPeriods(Date startDateToDisable) {
-		// Until quarterly forecasting is detected, we may need to also
-		// return the two prior months. For example, if now is August
-		// and we want to set the quota for Q3 (starts in July), we 
-		// need the period that starts July 1.
-		Date startDate = Date.today().addMonths(-2);
+		// By popular request, the lookback is expanded to a year.
+		Date startDate = Date.today().addMonths(-13);
 		List<SelectOption> options = new List<SelectOption>();
 		
 
