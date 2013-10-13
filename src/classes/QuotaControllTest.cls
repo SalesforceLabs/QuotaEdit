@@ -158,5 +158,18 @@ private class QuotaControllTest {
     	qc.getAvailableIsoCodes();
     	qc.showPopup();
     	qc.closePopup();
-    }    
+    } 
+    
+    static testMethod void testProductFamily() {
+    	ProductFamilyUtil.getActiveProductFamilies();
+    	QuotaController qc = new QuotaController();
+    	qc.onCheckProductFamily();
+    	qc.getIsProductFamily();
+    	qc.getIsProductFamilyChecked();
+    	qc.setIsProductFamily('true');
+    	qc.getSelectedProductFamily();
+    	qc.setSelectedProductFamily('abc');
+    	
+    }
+       
 }
