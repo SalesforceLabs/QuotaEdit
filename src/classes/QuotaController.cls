@@ -131,7 +131,7 @@ public with sharing class QuotaController {
         // be able to see and set the quotas of all the Forecasting Enabled
         // users.   
         if (PermUtil.isReadWriteAll() || PermUtil.isReadOnlyAll()) {
-            forecastUsers = [SELECT Id, Name FROM User WHERE ForecastEnabled = TRUE];
+            forecastUsers = [SELECT Id, Name FROM User WHERE ForecastEnabled = TRUE LIMIT 999];
         }
         else if (PermUtil.isReadWriteBelowMe() || PermUtil.isReadOnlyBelowMe()) {
             // Traverse the role hierarchy and find all the subordinates.
