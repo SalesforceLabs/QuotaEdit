@@ -2,7 +2,7 @@ Edit Quotas
 ===========
 
 UI for viewing and editing quotas for Collaborative Forecasting
-[[/QuotaEdit/QuotaUI.png]]
+![Screenshot](QuotaUI.png "Screenshot from Spring '14")
 
 Version 1.2 - 2013-09-03
 ------------------------
