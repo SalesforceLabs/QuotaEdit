@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Quotaedit by ForceDotComLabs</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Quotaedit</h1>
+        <p>UI for viewing and editing quotas for Collaborative Forecasting</p>
+
+        <p class="view"><a href="https://github.com/ForceDotComLabs/QuotaEdit">View the Project on GitHub <small>ForceDotComLabs/QuotaEdit</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/ForceDotComLabs/QuotaEdit/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/ForceDotComLabs/QuotaEdit/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/ForceDotComLabs/QuotaEdit">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="edit-quotas---version-15-2014-04-03" class="anchor" href="#edit-quotas---version-15-2014-04-03"><span class="octicon octicon-link"></span></a>Edit Quotas - version 1.5 (2014-04-03)</h1>
+
+<p>UI for viewing and editing quotas for Collaborative Forecasting
+<img src="QuotaUI.png" alt="Screenshot" title="Screenshot from Spring '14"></p>
+
+<ul>
+<li><p>Edit Quotas is a Salesforce.com managed app for viewing and editing quotas. Check out the 
+AppExchange listing <a href="https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ">here</a>. </p></li>
+<li>
+<p>Access to quotas is governed by the following:</p>
+
+<ul>
+<li>Full read/write to all forecasts for those with View All Forecasts and 
+Manage Quotas perm</li>
+<li>Full read/write to subordinate quotas only for those with Manage Quotas
+perm</li>
+<li>Read only for subordinate quotas for those without the Manage Quotas perm</li>
+</ul>
+</li>
+<li><p>Version 1.5 is adapted for the Spring '14 release. It supports editing multiple Forecast Types,
+if you have more than one defined.</p></li>
+<li><p>For orgs with quarterly forecasts, a help message explains how to enter them 
+in the monthly view.</p></li>
+<li><p>Multicurrency orgs will show each quota's currency, with an option to change
+it to any of the currencies defined for the org. An empty quota row will 
+default the currency to that user's default currency.</p></li>
+<li><p>When there is no quota for a user for a given month, it'll appear as blank. 
+If left blank, pressing the save button won't add a quota for this user. But
+there is no option to delete a quota - removing the number from a previously-
+saved quota will store a 0 value.</p></li>
+<li><p>Partner users work just like regular org users</p></li>
+</ul><h2>
+<a name="known-issues" class="anchor" href="#known-issues"><span class="octicon octicon-link"></span></a>Known issues</h2>
+
+<ul>
+<li>In edit mode, quotas that are whole number quotas will appear with only one digit after the period, for example 
+USD 123.0 </li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/ForceDotComLabs">ForceDotComLabs</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
