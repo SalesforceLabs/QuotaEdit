@@ -18,41 +18,53 @@
     </script>
 
 	<apex:form >
-      	<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>
 		<apex:panelGrid columns="2">
+	    <apex:outputPanel >
+			<apex:actionStatus style="color:red;font-weight:bold" id="updatingStatus" startText=" (refreshing...)" stopText=""/>
+		</apex:outputPanel>
+        <br/>
 		<apex:outputPanel >
 			<apex:outputText value="Period start date:"/>&nbsp;
 			<apex:selectList value="{!startDatePeriod}" multiSelect="false" size="1">
 				<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
 				<apex:selectOptions value="{!availablePeriods}"/>
 			</apex:selectList>&nbsp;
+      		<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>
 		</apex:outputPanel>
+        <br/>
+		<apex:outputPanel >
+			<apex:outputText value="Forecasting Type:"/>&nbsp;
+			<apex:selectList value="{!selectedForecastingType}" multiSelect="false" size="1">
+	     		<apex:actionSupport event="onchange" reRender="quotaTable,productFamilyOutputPanel" status="updatingStatus"/>
+				<apex:selectOptions value="{!activeForecastingTypes}"/>
+			</apex:selectList>&nbsp;
+		</apex:outputPanel>
+        <br/>
+        <apex:outputPanel id="productFamilyOutputPanel">
+    		<apex:outputText value="Product Family:" rendered="{!isProductFamily}"/>&nbsp;&nbsp;&nbsp;&nbsp;
+            <apex:selectList value="{!selectedProductFamily}" id="productFamilyList" multiSelect="false" size="1" rendered="{!isProductFamily}">
+				<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
+				<apex:selectOptions value="{!productFamilies}"/>
+			</apex:selectList>&nbsp;
+		</apex:outputPanel>
+        <br/>       
+	     		
+		<apex:outputText style="color:blue" value="{!headerMessage}"/>
+        </apex:panelGrid>
+        <!--
 		<apex:outputPanel >
 	        <apex:selectRadio value="{!isQuantity}">
 				<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
 	            <apex:selectOptions value="{!quantityOptions}"/>
 	        </apex:selectRadio>&nbsp;
 	    </apex:outputPanel>
-	    <apex:outputPanel>
+	    <apex:outputPanel >
 	     	<apex:outputText value="Product Family quotas?"/>
 	     	<apex:inputCheckbox value="{!isProductFamily}">
 	     		<apex:actionSupport event="onclick" action="{!onCheckProductFamily}" reRender="productFamilyList" status="updatingStatus"/>
 				<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>	     		
 			</apex:inputCheckbox>&nbsp;	     	
-	     	<apex:selectList value="{!selectedProductFamily}" id="productFamilyList" multiSelect="false" size="1" disabled="{!NOT(isProductFamilyChecked)}">
-				<apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
-				<apex:selectOptions value="{!productFamilies}"/>
-			</apex:selectList>&nbsp;
-		</apex:outputPanel>
-	    <apex:outputPanel>
-			<apex:actionStatus id="updatingStatus" startText=" (refreshing...)" stopText=""/>
-		</apex:outputPanel>
-	     		
-	     
-	     
-	     </apex:panelGrid>
-		<apex:outputText value="{!headerMessage}"/>
-	
+		-->
 		<apex:outputPanel id="quarterlyPopup">
     	    <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUp}"/>
             <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUp}">
@@ -62,7 +74,7 @@
                 <br/><br/>Leave the other months blank.<br/><br/><br/>
                 <apex:commandButton value="OK" action="{!closePopup}" rerender="quarterlyPopup"/>
             </apex:outputPanel>
-    </apex:outputPanel>
+    	</apex:outputPanel>
 	</apex:form><br/>
         	
     <apex:form id="quotaTable">
@@ -70,12 +82,6 @@
             <apex:pageMessages />
             <apex:pageBlockButtons id="pageBlockButtons">
                 <apex:commandButton value="Save" action="{!save}" disabled="{!saveDisabled}"/>
-                <br/>Copy this period's quota to ...
-                <apex:selectList value="{!futurePeriod}" multiSelect="false" size="1">
-					<apex:actionSupport event="onchange" reRender="applyFutureButton"/>
-					<apex:selectOptions value="{!availablePeriodsForApplyFuture}"/>
-				</apex:selectList>&nbsp;
-                <apex:commandButton id="applyFutureButton" value="OK" disabled="{!isApplyToPeriodDisabled}" action="{!applyToPeriod}" />
             </apex:pageBlockButtons>
     		<apex:pageBlockTable id="pageBlockTable" style="width:350px" value="{!quotas}" var="q">
  		        	<apex:column id="nameColumn" headerValue="Name">
@@ -102,6 +108,14 @@
 	        		</apex:column>
     		
     		</apex:pageBlockTable>
+		</apex:pageBlock>
+        <apex:pageBlock title="Copy the above quota to another time period:">
+            <apex:outputText value="Select starting month:"/>&nbsp;
+            <apex:selectList value="{!futurePeriod}" multiSelect="false" size="1">
+                <apex:actionSupport event="onchange" reRender="applyFutureButton"/>
+                <apex:selectOptions value="{!availablePeriodsForApplyFuture}"/>
+            </apex:selectList>&nbsp;
+        <apex:commandButton id="applyFutureButton" value="OK" disabled="{!isApplyToPeriodDisabled}" action="{!applyToPeriod}" />
 		</apex:pageBlock>
     </apex:form>
     
