@@ -329,6 +329,9 @@ public with sharing class QuotaController {
         for (QuotaModel m : currentPeriodQuotas) {
             QuotaModel m2 = quotasForFuture.get(m.ownerId);
             m2.amount = m.amount;
+            if (isMultiCurrencyOrg) { 
+            	m2.currencyIsoCode = m.currencyIsoCode;
+            }
         }
         return saveInternal(quotasForFuture.values());
     }
