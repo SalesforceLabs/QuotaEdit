@@ -147,8 +147,6 @@ private class QuotaControllTest {
     	qc.getStartDatePeriod();
     	qc.setFuturePeriod(Date.today().format());
     	qc.getFuturePeriod();
-    	qc.setIsQuantity('true');
-    	qc.getIsQuantity();
     	qc.getAvailablePeriodsForApplyFuture();
     	QuotaController.getAvailablePeriods();
     	qc.getIsApplyToPeriodDisabled();
@@ -165,8 +163,6 @@ private class QuotaControllTest {
     	QuotaController qc = new QuotaController();
     	qc.onCheckProductFamily();
     	qc.getIsProductFamily();
-    	qc.getIsProductFamilyChecked();
-    	qc.setIsProductFamily('true');
     	qc.getSelectedProductFamily();
     	qc.setSelectedProductFamily('abc');
     	
