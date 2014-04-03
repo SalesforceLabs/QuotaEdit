@@ -1,14 +1,11 @@
-Edit Quotas
+Edit Quotas - version 1.5 (2014-04-03)
 ===========
 
 UI for viewing and editing quotas for Collaborative Forecasting
 ![Screenshot](QuotaUI.png "Screenshot from Spring '14")
 
-Version 1.2 - 2013-09-03
-------------------------
-
-* Edit Quotas is a managed app for viewing and editing quotas. Check out the 
-  AppExchange listing (here)[https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ]. 
+* Edit Quotas is a Salesforce.com managed app for viewing and editing quotas. Check out the 
+  AppExchange listing [here](https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ). 
   
 * Access to quotas is governed by the following:
   - Full read/write to all forecasts for those with View All Forecasts and 
@@ -16,6 +13,9 @@ Version 1.2 - 2013-09-03
   - Full read/write to subordinate quotas only for those with Manage Quotas
     perm
   - Read only for subordinate quotas for those without the Manage Quotas perm
+  
+* Version 1.5 is adapted for the Spring '14 release. It supports editing multiple Forecast Types,
+  if you have more than one defined.
  
 * For orgs with quarterly forecasts, a help message explains how to enter them 
   in the monthly view.
