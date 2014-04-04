@@ -333,7 +333,17 @@ public with sharing class QuotaController {
             	m2.currencyIsoCode = m.currencyIsoCode;
             }
         }
-        return saveInternal(quotasForFuture.values());
+        PageReference ret = null;
+        try {
+        	ret = saveInternal(quotasForFuture.values());
+        }
+        catch(System.DMLException ex) {
+            if (StatusCode.DUPLICATE_VALUE == ex.getDmlType(0)) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
+                    'If Quarterly Forecasting is enabled, please edit the quota using the start month only.'));
+            }
+        }
+        return ret;
     }
     
     
