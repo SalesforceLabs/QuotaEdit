@@ -6,7 +6,7 @@ public with sharing class CalendarUtil {
 		List<SelectOption> options = new List<SelectOption>();
 		
 
-		List<Period> periods = [SELECT StartDate FROM Period WHERE EndDate > :startDate AND Type='Month' ORDER BY StartDate];
+		List<Period> periods = [SELECT StartDate FROM Period WHERE EndDate > :startDate AND Type='Month' ORDER BY StartDate LIMIT 999];
 		if (periods == null || periods.size() == 0)
 			return options;
 		
