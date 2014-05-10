@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+	 <labels>
+        <fullName>QuotaEdit_Period_start_date</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Period start date</shortDescription>
+        <value>Period start date:</value>
+    </labels>
+</CustomLabels>
+
