@@ -18,7 +18,11 @@
     </types>
     <types>
         <members>*</members>
-        <name>StaticResource</name>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomTab</name>
     </types>
     <version>30.0</version>
 </Package>

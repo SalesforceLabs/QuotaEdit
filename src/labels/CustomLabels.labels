@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>QE_Copy_Quota</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Copy Quota</shortDescription>
+        <value>Copy the above quota to another time period</value>
+    </labels>
+    <labels>
+        <fullName>QE_Other_months_blank</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Other months blank</shortDescription>
+        <value>Leave the other months blank</value>
+    </labels>
+    <labels>
+        <fullName>QE_Products_Not_Categorized</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Products Not Categorized</shortDescription>
+        <value>Products not categorized</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quantity</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quantity</shortDescription>
+        <value>Quantity</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quarterly_StartMonthOnly</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quarterly StartMonthOnly</shortDescription>
+        <value>If Quarterly Forecasting is enabled, please edit the quota using the start month only</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quarterly_explanation</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quarterly explanation</shortDescription>
+        <value>To enter a quarterly forecast, choose the beginning month of the quarter. For example, if the fiscal year starts in February, fill in quarterly quotas using February, May, August, and November.</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quota_CannotView</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quota CannotView</shortDescription>
+        <value>You do not have permission to view quotas</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quota_EditAll</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quota EditAll</shortDescription>
+        <value>You have permission to view and edit quotas for all Forecast Enabled users</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quota_EditReports</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quota EditReports</shortDescription>
+        <value>You have permission to view and edit quotas for Forecast Enabled users in your forecasting hierarchy</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quota_ViewAll</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quota ViewAll</shortDescription>
+        <value>You have permission to view quotas for all Forecast Enabled users, but no write permission</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quota_ViewReports</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quota ViewReports</shortDescription>
+        <value>You have permission to view (not edit) quotas for Forecast Enabled users in your forecasting hierarchy</value>
+    </labels>
+    <labels>
+        <fullName>QE_Quotas_For_Period</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quotas For Period</shortDescription>
+        <value>Quotas for period starting</value>
+    </labels>
+    <labels>
+        <fullName>QE_Revenue</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Revenue</shortDescription>
+        <value>Revenue</value>
+    </labels>
+    <labels>
+        <fullName>QE_Starting_Month</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Starting Month</shortDescription>
+        <value>Select starting month</value>
+    </labels>
+    <labels>
+        <fullName>QE_Status_Refreshing</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Refreshing</shortDescription>
+        <value>(refreshing...)</value>
+    </labels>
+    <labels>
+        <fullName>QE_Unless_ProductFamilies</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unless ProductFamilies</shortDescription>
+        <value>unless Product Families for Forecasting is enabled</value>
+    </labels>
+    <labels>
+        <fullName>QE_Using_quarterly_forecasts</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Using quarterly forecasts</shortDescription>
+        <value>Using quarterly forecasts?</value>
+    </labels>
+</CustomLabels>
