@@ -121,14 +121,6 @@
         <value>(refreshing...)</value>
     </labels>
     <labels>
-        <fullName>QE_Unless_ProductFamilies</fullName>
-        <categories>QuotaEdit</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Unless ProductFamilies</shortDescription>
-        <value>unless Product Families for Forecasting is enabled</value>
-    </labels>
-    <labels>
         <fullName>QE_Using_quarterly_forecasts</fullName>
         <categories>QuotaEdit</categories>
         <language>en_US</language>
