@@ -1,4 +1,4 @@
-Edit Quotas - version 1.5 (2014-04-03)
+Edit Quotas - version 1.6 (2014-09-24)
 ===========
 
 UI for viewing and editing quotas for Collaborative Forecasting
@@ -14,8 +14,7 @@ UI for viewing and editing quotas for Collaborative Forecasting
     perm
   - Read only for subordinate quotas for those without the Manage Quotas perm
   
-* Version 1.5 is adapted for the Spring '14 release. It supports editing multiple Forecast Types,
-  if you have more than one defined.
+* Version 1.6 is adapted for the Winter '15 release. It supports permission sets that are not tied to a profile.
  
 * For orgs with quarterly forecasts, a help message explains how to enter them 
   in the monthly view.
