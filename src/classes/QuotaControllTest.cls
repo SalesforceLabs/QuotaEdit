@@ -96,6 +96,7 @@ private class QuotaControllTest {
         u.ForecastEnabled = true;
         update u;
         System.assert(PermUtil.hasForecastingEnabled());
+        PermUtil.isReadWriteBelowMe(); // dummy call for code coverage
     }
     
     static testMethod void testGetAvailableMonthlyPeriods() {
@@ -156,6 +157,13 @@ private class QuotaControllTest {
         qc.getAvailableIsoCodes();
         qc.showPopup();
         qc.closePopup();
+        qc.getSelectedForecastingType();
+        qc.getSelectedProductFamily();
+        qc.onChangeForecastType();
+        qc.getUsesFamilies();
+        QuotaController.getActiveForecastingTypes();
+        QuotaController.getProductFamilies();
+        qc.getCurrencyColumnHeader();
     } 
     
     static testMethod void testProductFamily() {
@@ -165,7 +173,15 @@ private class QuotaControllTest {
         qc.getIsProductFamily();
         qc.getSelectedProductFamily();
         qc.setSelectedProductFamily('abc');
+        ProductFamilyUtil.usesFamilies();
         
     }
-       
+    
+    static testmethod void testForecastingType() {
+        ForecastingTypeUtil.initTypesMap();
+        List<ForecastingType> t = ForecastingTypeUtil.getActiveForecastingTypes();
+        ForecastingTypeUtil.getActiveForecastingTypesAsOptions();
+        ForecastingTypeUtil.getForecastingTypeById(t.get(0).Id);
+    }
+    
 }

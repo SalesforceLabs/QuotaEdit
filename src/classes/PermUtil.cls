@@ -7,8 +7,8 @@ public class PermUtil {
     private static boolean hasManageQuotas() {
         if (manageQuotas == null) {
             Id userId = Id.valueOf(UserInfo.getUserId());
-            List<PermissionSet> b = [SELECT Name FROM PermissionSet
-                WHERE PermissionsManageQuotas=true AND ProfileId IN (SELECT ProfileId from User WHERE Id=:userId)];
+            List<PermissionSetAssignment> b = [SELECT p.Id FROM PermissionSetAssignment p
+                WHERE p.PermissionSet.PermissionsManageQuotas=true AND p.assigneeId=:userId];
             manageQuotas = b != null && b.size() > 0;
         }
         return manageQuotas;                
@@ -17,8 +17,8 @@ public class PermUtil {
     private static boolean hasViewAllForecasts() {
         if (viewAllForecasts == null) {
             Id userId = Id.valueOf(UserInfo.getUserId());
-            List<PermissionSet> b = [SELECT Name FROM PermissionSet
-                WHERE PermissionsViewAllForecasts=true AND ProfileId IN (SELECT ProfileId from User WHERE Id=:userId)];
+            List<PermissionSetAssignment> b = [SELECT p.Id FROM PermissionSetAssignment p
+                WHERE p.PermissionSet.PermissionsViewAllForecasts=true AND p.assigneeId=:userId];
             viewAllForecasts = b != null && b.size() > 0;
         }
         return viewAllForecasts;        

@@ -1,7 +1,7 @@
 public with sharing class QuotaController {
 
 	Date startDate = CalendarUtil.getPeriodForNow();
-	Id forecastingTypeId = ForecastingTypeUtil.types.get(0).Id;
+	Id forecastingTypeId = ForecastingTypeUtil.types.get(0) == null ? 'null' : ForecastingTypeUtil.types.get(0).Id;
 	ForecastingType selectedType = ForecastingTypeUtil.types.get(0);
 	
 	public Date futureDate = CalendarUtil.getPeriodForNow();
