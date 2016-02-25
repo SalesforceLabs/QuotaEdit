@@ -18,6 +18,9 @@
     </script>
     
     <apex:form rendered="{!NOT(ForecastingEnabled)}">
+        <apex:outputText style="color:red;font-weight:bold" value="{!$Label.QE_Forecasting_Disabled}"/>
+    </apex:form>
+    <apex:form rendered="{!ForecastingEnabled}">
     	<apex:sectionHeader title="{!$Label.QE_Title}" subtitle="{!$Label.QE_SubTitle}" />
         <apex:panelGrid columns="2">
 
