@@ -96,15 +96,11 @@
     </apex:form><br/>
             
     <apex:form id="quotaTable" rendered="{!ForecastingEnabled}">
-        <apex:pageBlock id="pageBlock">
-     	    <apex:facet name="header">
-	        	<h2>{!$Label.QE_Quotas_For_Period} {!startDatePeriod}</h2>
-	        	<apex:pageBlockButtons id="pageBlockButtons">
-                	<apex:commandButton value="{!$Label.site.submit}" action="{!save}" disabled="{!saveDisabled}"/>
-            	</apex:pageBlockButtons>
-	    	</apex:facet>
+        <apex:pageBlock id="pageBlock" title="{!$Label.QE_Quotas_For_Period} {!startDatePeriod}">
             <apex:pageMessages />
-            
+            apex:pageBlockButtons id="pageBlockButtons">
+                <apex:commandButton value="{!$Label.site.submit}" action="{!save}" disabled="{!saveDisabled}"/>
+            </apex:pageBlockButtons>
             <apex:pageBlockTable id="pageBlockTable" style="width:350px" value="{!quotas}" var="q">
                     <apex:column id="nameColumn" headerValue="{!$ObjectType.User.fields.Name.Label}">
                         <apex:outputText value="{!q.ownerName}" style="width:150px"/>
