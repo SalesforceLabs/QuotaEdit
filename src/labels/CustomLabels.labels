@@ -25,6 +25,22 @@
         <value>Leave the other months blank</value>
     </labels>
     <labels>
+        <fullName>QE_PeriodDateRange</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for period range</shortDescription>
+        <value>Forecasting period</value>
+    </labels>
+    <labels>
+        <fullName>QE_PeriodOptions</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for header options</shortDescription>
+        <value>Forecasting period options</value>
+    </labels>
+    <labels>
         <fullName>QE_Products_Not_Categorized</fullName>
         <categories>QuotaEdit</categories>
         <language>en_US</language>
@@ -46,7 +62,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Quarterly StartMonthOnly</shortDescription>
-        <value>If Quarterly Forecasting is enabled, please edit the quota using the start month only</value>
+        <value>If Quarterly Forecasting is enabled, please select &quot;Quarter&quot; from the options above before attempting to add quotas.</value>
     </labels>
     <labels>
         <fullName>QE_Quarterly_explanation</fullName>
@@ -127,6 +143,22 @@
         <protected>true</protected>
         <shortDescription>Status Refreshing</shortDescription>
         <value>(refreshing...)</value>
+    </labels>
+    <labels>
+        <fullName>QE_SubTitle</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>App subtitle in header</shortDescription>
+        <value>Quota Edit by Salesforce Labs</value>
+    </labels>
+    <labels>
+        <fullName>QE_Title</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>App title in header</shortDescription>
+        <value>Forecasting</value>
     </labels>
     <labels>
         <fullName>QE_Using_quarterly_forecasts</fullName>

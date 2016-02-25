@@ -18,45 +18,55 @@
     </script>
     
     <apex:form rendered="{!NOT(ForecastingEnabled)}">
-    	<apex:outputText style="color:red;font-weight:bold" value="{!$Label.QE_Forecasting_Disabled}"/>
-    </apex:form>
-
-    <apex:form rendered="{!ForecastingEnabled}">
+    	<apex:sectionHeader title="{!$Label.QE_Title}" subtitle="{!$Label.QE_SubTitle}" />
         <apex:panelGrid columns="2">
-        <apex:outputPanel >
-            <apex:actionStatus style="color:red;font-weight:bold" id="updatingStatus" startText=" {!$Label.QE_Status_Refreshing}" stopText=""/>
-        </apex:outputPanel>
-        <br/>
-        <apex:outputPanel >
-            <apex:outputText value="{!$ObjectType.Period.Label} {!$ObjectType.Period.fields.StartDate.Label}:"/>&nbsp;
-            <apex:selectList value="{!startDatePeriod}" multiSelect="false" size="1">
-                <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
-                <apex:selectOptions value="{!availablePeriods}"/>
-            </apex:selectList>&nbsp;
-            <apex:commandLink action="{!showPopup}" style="color:blue" value="{!$Label.QE_Using_quarterly_forecasts}" rerender="quarterlyPopup"/><br/>
-        </apex:outputPanel>
-        <br/>
-        <apex:outputPanel >
-            <apex:outputText value="{!$ObjectType.ForecastingType.Label}"/>&nbsp;
-            <apex:selectList value="{!selectedForecastingType}" multiSelect="false" size="1">
-                <apex:actionSupport event="onchange" reRender="quotaTable,productFamilyOutputPanel" status="updatingStatus"/>
-                <apex:selectOptions value="{!activeForecastingTypes}"/>
-            </apex:selectList>&nbsp;
-        </apex:outputPanel>
-        <br/>
-        <apex:outputPanel id="productFamilyOutputPanel" rendered="{!isProductFamily}">
-            <apex:outputText value="{!$ObjectType.Product2.fields.Family.Label}" />&nbsp;&nbsp;&nbsp;&nbsp;
-            <apex:selectList value="{!selectedProductFamily}" id="productFamilyList" multiSelect="false" size="1" disabled="{!NOT(usesFamilies)}" >
-            <!-- rendered="{!usesFamilies}"> -->
-                <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
-                <apex:selectOptions value="{!productFamilies}"/>
-            </apex:selectList>
-            <!--<apex:outputText value="{!$Label.QE_Products_Not_Categorized}" rendered="{!NOT(usesFamilies)}" /> -->
-            &nbsp;
-        </apex:outputPanel>
-        <br/>       
-                
-        <apex:outputText style="color:blue" value="{!headerMessage}"/>
+
+	        <apex:outputPanel >
+	            <apex:actionStatus style="color:red;font-weight:bold" id="updatingStatus" startText=" {!$Label.QE_Status_Refreshing}" stopText=""/>
+           	</apex:outputPanel>
+           	
+           	<apex:outputPanel >
+        		<apex:outputText style="color:blue" value="{!headerMessage}"/>
+    		</apex:outputPanel>
+
+			<apex:outputText style="vertical-align:middle" value="{!$Label.QE_PeriodOptions}"/>
+    		
+            <apex:outputPanel >
+	            <apex:selectRadio value="{!periodType}">
+	            	<apex:actionSupport event="onchange" reRender="options,quotaTable" status="updatingStatus"/>
+	            	<apex:selectOptions value="{!availablePeriodTypes}"/>
+	            </apex:selectRadio>
+	        </apex:outputPanel>
+
+			<apex:outputText value="{!$Label.QE_PeriodDateRange}"/>
+			
+	        <apex:outputPanel id="options" style="padding-top:15px">
+	            <apex:selectList value="{!startDatePeriod}" multiSelect="false" size="1">
+	                <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
+	                <apex:selectOptions value="{!availablePeriods}"/>
+	            </apex:selectList>
+	            <!--<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>-->
+	        </apex:outputPanel>
+	        
+	        <apex:outputPanel >
+	            <apex:outputText value="{!$ObjectType.ForecastingType.Label}"/>&nbsp;
+            </apex:outputPanel>
+            
+            <apex:outputPanel >
+	            <apex:selectList value="{!selectedForecastingType}" multiSelect="false" size="1">
+	                <apex:actionSupport event="onchange" reRender="quotaTable,productFamilyOutputPanel" status="updatingStatus"/>
+	                <apex:selectOptions value="{!activeForecastingTypes}"/>
+	            </apex:selectList>&nbsp;
+	        </apex:outputPanel>
+
+	        <apex:outputPanel id="productFamilyOutputPanel" rendered="{!isProductFamily}">
+	            <apex:outputText value="{!$ObjectType.Product2.fields.Family.Label}" />&nbsp;&nbsp;&nbsp;&nbsp;
+	            <apex:selectList value="{!selectedProductFamily}" id="productFamilyList" multiSelect="false" size="1" disabled="{!NOT(usesFamilies)}" >
+	            <!-- rendered="{!usesFamilies}"> -->
+	                <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
+	                <apex:selectOptions value="{!productFamilies}"/>
+	            </apex:selectList>
+	        </apex:outputPanel>
         </apex:panelGrid>
         <!--
         <apex:outputPanel >
@@ -83,11 +93,15 @@
     </apex:form><br/>
             
     <apex:form id="quotaTable" rendered="{!ForecastingEnabled}">
-        <apex:pageBlock id="pageBlock" title="{!$Label.QE_Quotas_For_Period} {!startDatePeriod}">
+        <apex:pageBlock id="pageBlock">
+     	    <apex:facet name="header">
+	        	<h2>{!$Label.QE_Quotas_For_Period} {!startDatePeriod}</h2>
+	        	<apex:pageBlockButtons id="pageBlockButtons">
+                	<apex:commandButton value="{!$Label.site.submit}" action="{!save}" disabled="{!saveDisabled}"/>
+            	</apex:pageBlockButtons>
+	    	</apex:facet>
             <apex:pageMessages />
-            <apex:pageBlockButtons id="pageBlockButtons">
-                <apex:commandButton value="{!$Label.site.submit}" action="{!save}" disabled="{!saveDisabled}"/>
-            </apex:pageBlockButtons>
+            
             <apex:pageBlockTable id="pageBlockTable" style="width:350px" value="{!quotas}" var="q">
                     <apex:column id="nameColumn" headerValue="{!$ObjectType.User.fields.Name.Label}">
                         <apex:outputText value="{!q.ownerName}" style="width:150px"/>
@@ -114,12 +128,16 @@
             
             </apex:pageBlockTable>
         </apex:pageBlock>
-        <apex:pageBlock title="{!$Label.QE_Copy_Quota}">
-            <apex:outputText value="{!$Label.QE_Starting_Month}"/>&nbsp;
+        <apex:pageBlock>
+	        <apex:facet name="header">
+	        	<h2>{!$Label.QE_Copy_Quota}</h2>
+	    	</apex:facet>
+	        
+            <apex:outputText value="{!$Label.QE_Starting_Month}"/>
             <apex:selectList value="{!futurePeriod}" multiSelect="false" size="1">
                 <apex:actionSupport event="onchange" reRender="applyFutureButton"/>
                 <apex:selectOptions value="{!availablePeriodsForApplyFuture}"/>
-            </apex:selectList>&nbsp;
+            </apex:selectList>
         <apex:commandButton id="applyFutureButton" value="{!$Label.site.submit}" disabled="{!isApplyToPeriodDisabled}" action="{!applyToPeriod}" />
         </apex:pageBlock>
     </apex:form>
