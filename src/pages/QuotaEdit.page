@@ -29,7 +29,7 @@
                 <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
                 <apex:selectOptions value="{!availablePeriods}"/>
             </apex:selectList>&nbsp;
-            <apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>
+            <apex:commandLink action="{!showPopup}" style="color:blue" value="{!$Label.QE_Using_quarterly_forecasts}" rerender="quarterlyPopup"/><br/>
         </apex:outputPanel>
         <br/>
         <apex:outputPanel >

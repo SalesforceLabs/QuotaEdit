@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customLabels>
+        <label> Copier les quotas ci-dessus vers une autre période</label>
+        <name>QE_Copy_Quota</name>
+    </customLabels>
+    <customLabels>
+        <label>Laisser les autres mois vides.</label>
+        <name>QE_Other_months_blank</name>
+    </customLabels>
+    <customLabels>
+        <label>Produits sans catégorie</label>
+        <name>QE_Products_Not_Categorized</name>
+    </customLabels>
+    <customLabels>
+        <label>Quantité</label>
+        <name>QE_Quantity</name>
+    </customLabels>
+    <customLabels>
+        <label>Si les Prévisions Trimestrielles sont activées, saisir uniquement le quota sur le mois de début</label>
+        <name>QE_Quarterly_StartMonthOnly</name>
+    </customLabels>
+    <customLabels>
+        <label>Pour saisir une prévision trimestrielle, choisir le mois de début du trimestre. Par exemple, si l&apos;année fiscale débute en février.</label>
+        <name>QE_Quarterly_explanation</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous n&apos;avez pas la permission de voir les quotas</label>
+        <name>QE_Quota_CannotView</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez la permission de lire et modifier les quotas pour tous les utilisateurs de Prévisions autorisés</label>
+        <name>QE_Quota_EditAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez la permission de lire et modifier les quotas pour les utilisateurs de Prévisions autorisés dans votre hiérarchie de prévisions</label>
+        <name>QE_Quota_EditReports</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez la permission de lire les quotas pour tous les utilisateurs de Prévisions autorisés, mais vous n&apos;avez pas la permission de les modifier</label>
+        <name>QE_Quota_ViewAll</name>
+    </customLabels>
+    <customLabels>
+        <label>Vous avez la permission de lire (non modifier) les quotas pour les utilisateurs de Prévisions autorisés dans votre hiérarchie de prévisions</label>
+        <name>QE_Quota_ViewReports</name>
+    </customLabels>
+    <customLabels>
+        <label>Quotas pour la période démarrant le</label>
+        <name>QE_Quotas_For_Period</name>
+    </customLabels>
+    <customLabels>
+        <label>Chiffre d&apos;affaires</label>
+        <name>QE_Revenue</name>
+    </customLabels>
+    <customLabels>
+        <label>Sélectionner le mois de début</label>
+        <name>QE_Starting_Month</name>
+    </customLabels>
+    <customLabels>
+        <label>(rafraîchissement...)</label>
+        <name>QE_Status_Refreshing</name>
+    </customLabels>
+    <customLabels>
+        <label>Utilisation des prévisions trimestrielles?</label>
+        <name>QE_Using_quarterly_forecasts</name>
+    </customLabels>
+    <customTabs>
+        <label>Modifier les Quotas</label>
+        <name>Edit_Quotas</name>
+    </customTabs>
+</Translations>
