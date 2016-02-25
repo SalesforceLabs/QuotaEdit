@@ -1,4 +1,4 @@
-Edit Quotas - version 1.6 (2014-09-24)
+Edit Quotas - version 1.7 (2016-02-26)
 ===========
 
 UI for viewing and editing quotas for Collaborative Forecasting
