@@ -5,6 +5,10 @@
         <name>QE_Copy_Quota</name>
     </customLabels>
     <customLabels>
+        <label>Les prévisions n&apos;est pas activé ou non accessible.</label>
+        <name>QE_Forecasting_Disabled</name>
+    </customLabels>
+    <customLabels>
         <label>Laisser les autres mois vides.</label>
         <name>QE_Other_months_blank</name>
     </customLabels>

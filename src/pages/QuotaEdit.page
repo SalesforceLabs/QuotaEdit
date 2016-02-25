@@ -16,8 +16,12 @@
         }
         
     </script>
+    
+    <apex:form rendered="{!NOT(ForecastingEnabled)}">
+    	<apex:outputText style="color:red;font-weight:bold" value="{!$Label.QE_Forecasting_Disabled}"/>
+    </apex:form>
 
-    <apex:form >
+    <apex:form rendered="{!ForecastingEnabled}">
         <apex:panelGrid columns="2">
         <apex:outputPanel >
             <apex:actionStatus style="color:red;font-weight:bold" id="updatingStatus" startText=" {!$Label.QE_Status_Refreshing}" stopText=""/>
@@ -78,7 +82,7 @@
         </apex:outputPanel>
     </apex:form><br/>
             
-    <apex:form id="quotaTable">
+    <apex:form id="quotaTable" rendered="{!ForecastingEnabled}">
         <apex:pageBlock id="pageBlock" title="{!$Label.QE_Quotas_For_Period} {!startDatePeriod}">
             <apex:pageMessages />
             <apex:pageBlockButtons id="pageBlockButtons">

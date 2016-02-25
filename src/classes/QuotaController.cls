@@ -1,15 +1,52 @@
 public with sharing class QuotaController {
 
-	Date startDate = CalendarUtil.getPeriodForNow();
-	Id forecastingTypeId = ForecastingTypeUtil.types.get(0) == null ? 'null' : ForecastingTypeUtil.types.get(0).Id;
-	ForecastingType selectedType = ForecastingTypeUtil.types.get(0);
-	
-	public Date futureDate = CalendarUtil.getPeriodForNow();
+	Date startDate = null;
+	Id forecastingTypeId = null; 
+	ForecastingType selectedType = null; 
+
+	public Boolean forecastingEnabled = true;
+	public Date futureDate = null;
 	public String isQuantityString = 'false';
-	
 	public Map<Id, QuotaModel> quotaMap = new Map<Id, QuotaModel>();
-	
 	public String selectedPFString = '';
+
+
+	public QuotaController() {
+		forecastingEnabled = isForecastingEnabled();
+		if (!forecastingEnabled)
+			return;
+		startDate = CalendarUtil.getPeriodForNow();
+		forecastingTypeId = ForecastingTypeUtil.types.get(0) == null ? 'null' : ForecastingTypeUtil.types.get(0).Id;
+		selectedType = ForecastingTypeUtil.types.get(0);
+		futureDate = CalendarUtil.getPeriodForNow();
+		getQuotas();
+	}
+	
+	public boolean getForecastingEnabled() {
+		return forecastingEnabled;
+	}
+	
+	// Avoid runtime errors by checking in advance whether
+	// Forecasting is enabled in the org
+	private Boolean isForecastingEnabled() {
+		String[] types = new String[]{'ForecastingItem','ForecastingQuota'};
+		Schema.DescribeSobjectResult[] results = Schema.describeSObjects(types);
+		
+		if (results.size() < 2)
+			return false;
+		
+		for (Schema.DescribeSObjectResult res : results) {
+			System.debug('sObject Label: ' + res.getLabel());
+			if (!res.isAccessible())
+				return false;
+		}
+		if (ForecastingTypeUtil.types == null || 
+			ForecastingTypeUtil.types.size() == 0)
+			return false;
+		return true;
+	}
+	
+	
 	
 	public void onCheckProductFamily() {
 	}
@@ -104,10 +141,6 @@ public with sharing class QuotaController {
 	
 	public void setSelectedProductFamily(String str) {
 		selectedPFString = str;
-	}
-	
-	public QuotaController() {
-		getQuotas();
 	}
 	
 	// For testing

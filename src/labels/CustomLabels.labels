@@ -9,6 +9,14 @@
         <value>Copy the above quota to another time period</value>
     </labels>
     <labels>
+        <fullName>QE_Forecasting_Disabled</fullName>
+        <categories>QuotaEdit</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Forecasting not available.</shortDescription>
+        <value>Forecasting is not enabled or not accessible.</value>
+    </labels>
+    <labels>
         <fullName>QE_Other_months_blank</fullName>
         <categories>QuotaEdit</categories>
         <language>en_US</language>
