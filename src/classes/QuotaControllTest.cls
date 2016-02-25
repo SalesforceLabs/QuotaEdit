@@ -149,7 +149,7 @@ private class QuotaControllTest {
         qc.setFuturePeriod(Date.today().format());
         qc.getFuturePeriod();
         qc.getAvailablePeriodsForApplyFuture();
-        QuotaController.getAvailablePeriods();
+        qc.getAvailablePeriods();
         qc.getIsApplyToPeriodDisabled();
         QuotaController.getQuantityOptions();
         qc.getQuotaColumnHeader();

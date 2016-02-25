@@ -1,11 +1,15 @@
 public with sharing class QuotaController {
-
+	
 	Date startDate = null;
-	Id forecastingTypeId = null; 
-	ForecastingType selectedType = null; 
-
+	Id forecastingTypeId = null;
+	ForecastingType selectedType = null;
+	
+	
+	public String periodType {
+		get;set;
+	}
 	public Boolean forecastingEnabled = true;
-	public Date futureDate = null;
+	public Date futureDate = CalendarUtil.getPeriodForNow();
 	public String isQuantityString = 'false';
 	public Map<Id, QuotaModel> quotaMap = new Map<Id, QuotaModel>();
 	public String selectedPFString = '';
@@ -314,8 +318,15 @@ public with sharing class QuotaController {
 		return null;
 	}
 	
-	public static List<SelectOption> getAvailablePeriods() {
-		return CalendarUtil.getAvailableMonthlyPeriods(null);
+	public List<SelectOption> getAvailablePeriodTypes() {
+		List<SelectOption> types = new List<SelectOption>();
+		types.add(new SelectOption('Month','Month'));
+		types.add(new SelectOption('Quarter','Quarter'));
+		return types;
+	}
+	
+	public List<SelectOption> getAvailablePeriods() {
+		return CalendarUtil.getAvailableMonthlyPeriods(null, periodType);
 	}
 	
 	public static List<SelectOption> getActiveForecastingTypes() {
@@ -323,7 +334,7 @@ public with sharing class QuotaController {
 	}
 	
 	public List<SelectOption> getAvailablePeriodsForApplyFuture() {
-		return CalendarUtil.getAvailableMonthlyPeriods(startDate);
+		return CalendarUtil.getAvailableMonthlyPeriods(startDate, this.periodType);
 	}
 	
 	
