@@ -98,7 +98,7 @@
     <apex:form id="quotaTable" rendered="{!ForecastingEnabled}">
         <apex:pageBlock id="pageBlock" title="{!$Label.QE_Quotas_For_Period} {!startDatePeriod}">
             <apex:pageMessages />
-            apex:pageBlockButtons id="pageBlockButtons">
+            <apex:pageBlockButtons id="pageBlockButtons">
                 <apex:commandButton value="{!$Label.site.submit}" action="{!save}" disabled="{!saveDisabled}"/>
             </apex:pageBlockButtons>
             <apex:pageBlockTable id="pageBlockTable" style="width:350px" value="{!quotas}" var="q">
