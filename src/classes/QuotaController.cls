@@ -17,10 +17,10 @@ public with sharing class QuotaController {
 		forecastingEnabled = isForecastingEnabled();
 		if (!forecastingEnabled)
 			return;
-		startDate = CalendarUtil.getPeriodForNow();
+		startDate = CalendarUtil.getPeriodForNow(periodType);
 		forecastingTypeId = ForecastingTypeUtil.types.get(0) == null ? 'null' : ForecastingTypeUtil.types.get(0).Id;
 		selectedType = ForecastingTypeUtil.types.get(0);
-		futureDate = CalendarUtil.getPeriodForNow();
+		futureDate = CalendarUtil.getPeriodForNow(periodType);
 		getQuotas();
 	}
 	
@@ -332,6 +332,7 @@ public with sharing class QuotaController {
 	}
 	
 	public List<SelectOption> getAvailablePeriods() {
+		startDate = CalendarUtil.getPeriodForNow(periodType);
 		return CalendarUtil.getAvailablePeriods(null, periodType);
 	}
 	

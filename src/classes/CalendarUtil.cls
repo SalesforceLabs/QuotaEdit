@@ -54,9 +54,9 @@ public with sharing class CalendarUtil {
     	return p.StartDate.format();
     }
     
-    public static Date getPeriodForNow() {
+    public static Date getPeriodForNow(String periodType) {
         Date today = Date.today();
-        List<Period> periods = [SELECT StartDate FROM Period Where EndDate >= :today AND StartDate <= :today ORDER BY StartDate DESC LIMIT 1];
+        List<Period> periods = [SELECT StartDate FROM Period Where EndDate >= :today AND StartDate <= :today AND Type = :periodType ORDER BY StartDate DESC LIMIT 1];
         if (periods == null || periods.size() == 0)
             return today;
         return periods.get(0).StartDate;
