@@ -57,34 +57,24 @@
             
             <apex:outputPanel >
 	            <apex:selectList value="{!selectedForecastingType}" multiSelect="false" size="1">
-	                <apex:actionSupport event="onchange" reRender="quotaTable,productFamilyOutputPanel" status="updatingStatus"/>
+	                <apex:actionSupport event="onchange" reRender="quotaTable,productFamilyOutputPanel,productFamilyOutputPanelLabel" status="updatingStatus"/>
 	                <apex:selectOptions value="{!activeForecastingTypes}"/>
 	            </apex:selectList>&nbsp;
 	        </apex:outputPanel>
 
+	        <apex:outputPanel id="productFamilyOutputPanelLabel" rendered="{!isProductFamily}">
+	            <apex:outputText value="{!$ObjectType.Product2.fields.Family.Label}" />
+            </apex:outputPanel>
+
 	        <apex:outputPanel id="productFamilyOutputPanel" rendered="{!isProductFamily}">
-	            <apex:outputText value="{!$ObjectType.Product2.fields.Family.Label}" />&nbsp;&nbsp;&nbsp;&nbsp;
+	        
 	            <apex:selectList value="{!selectedProductFamily}" id="productFamilyList" multiSelect="false" size="1" disabled="{!NOT(usesFamilies)}" >
-	            <!-- rendered="{!usesFamilies}"> -->
 	                <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
 	                <apex:selectOptions value="{!productFamilies}"/>
 	            </apex:selectList>
 	        </apex:outputPanel>
         </apex:panelGrid>
-        <!--
-        <apex:outputPanel >
-            <apex:selectRadio value="{!isQuantity}">
-                <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
-                <apex:selectOptions value="{!quantityOptions}"/>
-            </apex:selectRadio>&nbsp;
-        </apex:outputPanel>
-        <apex:outputPanel >
-            <apex:outputText value="Product Family quotas?"/>
-            <apex:inputCheckbox value="{!isProductFamily}">
-                <apex:actionSupport event="onclick" action="{!onCheckProductFamily}" reRender="productFamilyList" status="updatingStatus"/>
-                <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>                
-            </apex:inputCheckbox>&nbsp;         
-        -->
+
         <apex:outputPanel id="quarterlyPopup">
             <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUp}"/>
             <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUp}">
