@@ -2,7 +2,7 @@ Edit Quotas - version 1.7 (2016-02-26)
 ===========
 
 UI for viewing and editing quotas for Collaborative Forecasting
-![Screenshot](QuotaUI.png "Screenshot from Spring '14")
+![Screenshot](QuotaUI.png "Screenshot from Spring '16")
 
 * Edit Quotas is a Salesforce.com managed app for viewing and editing quotas. Check out the 
   AppExchange listing [here](https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ). 
