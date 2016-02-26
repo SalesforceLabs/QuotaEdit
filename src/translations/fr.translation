@@ -13,6 +13,14 @@
         <name>QE_Other_months_blank</name>
     </customLabels>
     <customLabels>
+        <label>Quotas pour la période</label>
+        <name>QE_PeriodDateRange</name>
+    </customLabels>
+    <customLabels>
+        <label>Les options pour la période</label>
+        <name>QE_PeriodOptions</name>
+    </customLabels>
+    <customLabels>
         <label>Produits sans catégorie</label>
         <name>QE_Products_Not_Categorized</name>
     </customLabels>
@@ -21,7 +29,7 @@
         <name>QE_Quantity</name>
     </customLabels>
     <customLabels>
-        <label>Si les Prévisions Trimestrielles sont activées, saisir uniquement le quota sur le mois de début</label>
+        <label>Si les Prévisions Trimestrielles sont activées, choisir &quot;Quarter&quot;</label>
         <name>QE_Quarterly_StartMonthOnly</name>
     </customLabels>
     <customLabels>
@@ -63,6 +71,14 @@
     <customLabels>
         <label>(rafraîchissement...)</label>
         <name>QE_Status_Refreshing</name>
+    </customLabels>
+    <customLabels>
+        <label>Modifier les Quotas par Salesforce Labs</label>
+        <name>QE_SubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Des prévisions</label>
+        <name>QE_Title</name>
     </customLabels>
     <customLabels>
         <label>Utilisation des prévisions trimestrielles?</label>
