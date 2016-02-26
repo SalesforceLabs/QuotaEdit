@@ -14,21 +14,12 @@ UI for viewing and editing quotas for Collaborative Forecasting
     perm
   - Read only for subordinate quotas for those without the Manage Quotas perm
   
-* Version 1.6 is adapted for the Winter '15 release. It supports permission sets that are not tied to a profile.
- 
-* For orgs with quarterly forecasts, a help message explains how to enter them 
-  in the monthly view.
+* Version 1.7 is adapted for the Spring '16 release. 
+ - Support for Custom Fiscal Years
+ - Easier entry for customers using Quarterly Forecasts
+ - Localization to French
+ - Redesigned UI
   
-* Multicurrency orgs will show each quota's currency, with an option to change
-  it to any of the currencies defined for the org. An empty quota row will 
-  default the currency to that user's default currency.
-  
-* When there is no quota for a user for a given month, it'll appear as blank. 
-  If left blank, pressing the save button won't add a quota for this user. But
-  there is no option to delete a quota - removing the number from a previously-
-  saved quota will store a 0 value.
-
-* Partner users work just like regular org users
 
 Known issues
 ------------
