@@ -5,9 +5,7 @@ public with sharing class QuotaController {
 	ForecastingType selectedType = null;
 	
 	
-	public String periodType {
-		get;set;
-	}
+	public String periodType = 'Month';
 	public Boolean forecastingEnabled = true;
 	public Date futureDate = null;
 	public String isQuantityString = 'false';
@@ -83,6 +81,14 @@ public with sharing class QuotaController {
 	
 	public static boolean getSaveDisabled() {
 		return PermUtil.isReadOnlyAll() || PermUtil.isReadOnlyBelowMe();
+	}
+
+	public String getSelectedPeriodType() {
+		return periodType;
+	}
+	
+	public void setSelectedPeriodType(String selectedPeriod) {
+		periodType = selectedPeriod;
 	}
 	
 	public String getSelectedForecastingType() {
@@ -326,7 +332,7 @@ public with sharing class QuotaController {
 	}
 	
 	public List<SelectOption> getAvailablePeriods() {
-		return CalendarUtil.getAvailableMonthlyPeriods(null, periodType);
+		return CalendarUtil.getAvailablePeriods(null, periodType);
 	}
 	
 	public static List<SelectOption> getActiveForecastingTypes() {
@@ -334,7 +340,7 @@ public with sharing class QuotaController {
 	}
 	
 	public List<SelectOption> getAvailablePeriodsForApplyFuture() {
-		return CalendarUtil.getAvailableMonthlyPeriods(startDate, this.periodType);
+		return CalendarUtil.getAvailablePeriods(startDate, this.periodType);
 	}
 	
 	

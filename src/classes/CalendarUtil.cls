@@ -1,10 +1,10 @@
 public with sharing class CalendarUtil {
 
 	public static List<SelectOption> getAvailableMonthlyPeriods(Date startDateToDisable) {
-		return getAvailableMonthlyPeriods(startDateToDisable, 'Month');
+		return getAvailablePeriods(startDateToDisable, 'Month');
 	}
 	
-    public static List<SelectOption> getAvailableMonthlyPeriods(Date startDateToDisable, String typeOfPeriod) {
+    public static List<SelectOption> getAvailablePeriods(Date startDateToDisable, String typeOfPeriod) {
     	if(typeOfPeriod == null || typeOfPeriod == ''){
     		typeOfPeriod='Month';
     	}

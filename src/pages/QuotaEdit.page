@@ -35,15 +35,15 @@
 			<apex:outputText style="vertical-align:middle" value="{!$Label.QE_PeriodOptions}"/>
     		
             <apex:outputPanel >
-	            <apex:selectRadio value="{!periodType}">
-	            	<apex:actionSupport event="onchange" reRender="options,quotaTable" status="updatingStatus"/>
+	            <apex:selectRadio value="{!selectedPeriodType}">
+	            	<apex:actionSupport event="onchange" reRender="quotaTable,periodSelector" status="updatingStatus"/>
 	            	<apex:selectOptions value="{!availablePeriodTypes}"/>
 	            </apex:selectRadio>
 	        </apex:outputPanel>
 
 			<apex:outputText value="{!$Label.QE_PeriodDateRange}"/>
 			
-	        <apex:outputPanel id="options" style="padding-top:15px">
+	        <apex:outputPanel id="periodSelector" style="padding-top:15px">
 	            <apex:selectList value="{!startDatePeriod}" multiSelect="false" size="1">
 	                <apex:actionSupport event="onchange" reRender="quotaTable" status="updatingStatus"/>
 	                <apex:selectOptions value="{!availablePeriods}"/>
