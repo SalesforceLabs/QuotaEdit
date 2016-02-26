@@ -9,7 +9,7 @@ public with sharing class QuotaController {
 		get;set;
 	}
 	public Boolean forecastingEnabled = true;
-	public Date futureDate = CalendarUtil.getPeriodForNow();
+	public Date futureDate = null;
 	public String isQuantityString = 'false';
 	public Map<Id, QuotaModel> quotaMap = new Map<Id, QuotaModel>();
 	public String selectedPFString = '';
