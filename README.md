@@ -19,6 +19,12 @@ UI for viewing and editing quotas for Collaborative Forecasting
  - Easier entry for customers using Quarterly Forecasts
  - Localization to French
  - Redesigned UI
+
+* Installation instructions
+ - Install this package from AppExchange for All Users
+ - For the users you want to enable:
+   - Check their Manage Quotas and View All Forecasts perm
+   - For their Profile, enable access to the page under Enabled Visualforce Page Access and/or Enabled Apex Class Access lists
   
 
 Known issues
