@@ -8,7 +8,7 @@ UI for viewing and editing quotas for Collaborative Forecasting
   AppExchange listing [here](https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ). 
   
 * Access to quotas is governed by the following:
-  - Full read/write to all forecasts for those with View All Forecasts and 
+  - Full read/write to all quotas for those with View All Forecasts and 
     Manage Quotas perm
   - Full read/write to subordinate quotas only for those with Manage Quotas
     perm
