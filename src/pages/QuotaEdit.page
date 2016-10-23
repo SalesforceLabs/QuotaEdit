@@ -1,200 +1,617 @@
-<apex:page controller="QuotaController">
-
-	<script type="text/javascript">
-        // Hide the output component (the param). 
+<apex:page showHeader="true" controller="QuotaController" standardStylesheets="false" sidebar="true" applyBodyTag="false" docType="html-5.0">    
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    
+        
+        <head>
+            <title>Salesforce Lightning Design System Trailhead Project</title>
+            <apex:stylesheet value="{!URLFOR($Resource.slds, 'assets/styles/salesforce-lightning-design-system.css')}" />
+            <!-- KA - Picklist style CSS for LXP -->
+            <style> 
+                .uiInputSelect {
+                width: 100%;
+                padding-left: 1em;
+                padding-right: 1em;
+                min-height: 28px;
+                height: 44px;
+                padding: 7px 30px 7px 14px;
+                border-radius: .3125rem;
+                background-color: #ffffff;
+                color: #3c3d3e; 
+                font-size: 15px;
+                line-height: 14px;
+                
+                }
+                
+                .sf1select {
+                -webkit-appearance: none;
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9ImRvd25fMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnIGlkPSJEb3duX3g0MF8yeC5wbmdfMV8iPg0KCTxnIGlkPSJkaXJlY3Rkb3duX2NvcHkiPg0KCQk8Zz4NCgkJCTxwYXRoIGZpbGw9IiM5Njk4OTkiIGQ9Ik01NS4wNjYsMTcuODY2Yy0wLjUzMy0wLjkzNC0xLjQ2Ny0xLjUzMy0yLjUzMy0xLjZDNTIuMzk4LDE2LjE5OSw0Mi4zOTgsMTUuNiwzMiwxNS42DQoJCQkJYy0xMC4zOTksMC0yMC40LDAuNi0yMC41MzMsMC42NjdjLTEuMDY2LDAuMDY2LTIuMDY2LDAuNjY2LTIuNTMzLDEuNmMtMC41MzMsMC45MzQtMC41MzMsMi4wNjYsMCwzDQoJCQkJYzcuOTMzLDE0LjA2NiwyMC40LDI2LjI2NywyMC45MzMsMjYuNzMyYzEuMiwxLjA2NiwzLjA2NiwxLjA2Niw0LjI2NywwYzAuNTMzLTAuNDY3LDEzLTEyLjY2NiwyMC45MzMtMjYuNzMyDQoJCQkJQzU1LjYsMTkuOTMzLDU1LjYsMTguOCw1NS4wNjYsMTcuODY2eiIvPg0KCQk8L2c+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=);
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9ImRvd25fMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnIGlkPSJEb3duX3g0MF8yeC5wbmdfMV8iPg0KCTxnIGlkPSJkaXJlY3Rkb3duX2NvcHkiPg0KCQk8Zz4NCgkJCTxwYXRoIGZpbGw9IiM5Njk4OTkiIGQ9Ik01NS4wNjYsMTcuODY2Yy0wLjUzMy0wLjkzNC0xLjQ2Ny0xLjUzMy0yLjUzMy0xLjZDNTIuMzk4LDE2LjE5OSw0Mi4zOTgsMTUuNiwzMiwxNS42DQoJCQkJYy0xMC4zOTksMC0yMC40LDAuNi0yMC41MzMsMC42NjdjLTEuMDY2LDAuMDY2LTIuMDY2LDAuNjY2LTIuNTMzLDEuNmMtMC41MzMsMC45MzQtMC41MzMsMi4wNjYsMCwzDQoJCQkJYzcuOTMzLDE0LjA2NiwyMC40LDI2LjI2NywyMC45MzMsMjYuNzMyYzEuMiwxLjA2NiwzLjA2NiwxLjA2Niw0LjI2NywwYzAuNTMzLTAuNDY3LDEzLTEyLjY2NiwyMC45MzMtMjYuNzMyDQoJCQkJQzU1LjYsMTkuOTMzLDU1LjYsMTguOCw1NS4wNjYsMTcuODY2eiIvPg0KCQk8L2c+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=);
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9ImRvd25fMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnIGlkPSJEb3duX3g0MF8yeC5wbmdfMV8iPg0KCTxnIGlkPSJkaXJlY3Rkb3duX2NvcHkiPg0KCQk8Zz4NCgkJCTxwYXRoIGZpbGw9IiM5Njk4OTkiIGQ9Ik01NS4wNjYsMTcuODY2Yy0wLjUzMy0wLjkzNC0xLjQ2Ny0xLjUzMy0yLjUzMy0xLjZDNTIuMzk4LDE2LjE5OSw0Mi4zOTgsMTUuNiwzMiwxNS42DQoJCQkJYy0xMC4zOTksMC0yMC40LDAuNi0yMC41MzMsMC42NjdjLTEuMDY2LDAuMDY2LTIuMDY2LDAuNjY2LTIuNTMzLDEuNmMtMC41MzMsMC45MzQtMC41MzMsMi4wNjYsMCwzDQoJCQkJYzcuOTMzLDE0LjA2NiwyMC40LDI2LjI2NywyMC45MzMsMjYuNzMyYzEuMiwxLjA2NiwzLjA2NiwxLjA2Niw0LjI2NywwYzAuNTMzLTAuNDY3LDEzLTEyLjY2NiwyMC45MzMtMjYuNzMyDQoJCQkJQzU1LjYsMTkuOTMzLDU1LjYsMTguOCw1NS4wNjYsMTcuODY2eiIvPg0KCQk8L2c+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=);
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9ImRvd25fMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnIGlkPSJEb3duX3g0MF8yeC5wbmdfMV8iPg0KCTxnIGlkPSJkaXJlY3Rkb3duX2NvcHkiPg0KCQk8Zz4NCgkJCTxwYXRoIGZpbGw9IiM5Njk4OTkiIGQ9Ik01NS4wNjYsMTcuODY2Yy0wLjUzMy0wLjkzNC0xLjQ2Ny0xLjUzMy0yLjUzMy0xLjZDNTIuMzk4LDE2LjE5OSw0Mi4zOTgsMTUuNiwzMiwxNS42DQoJCQkJYy0xMC4zOTksMC0yMC40LDAuNi0yMC41MzMsMC42NjdjLTEuMDY2LDAuMDY2LTIuMDY2LDAuNjY2LTIuNTMzLDEuNmMtMC41MzMsMC45MzQtMC41MzMsMi4wNjYsMCwzDQoJCQkJYzcuOTMzLDE0LjA2NiwyMC40LDI2LjI2NywyMC45MzMsMjYuNzMyYzEuMiwxLjA2NiwzLjA2NiwxLjA2Niw0LjI2NywwYzAuNTMzLTAuNDY3LDEzLTEyLjY2NiwyMC45MzMtMjYuNzMyDQoJCQkJQzU1LjYsMTkuOTMzLDU1LjYsMTguOCw1NS4wNjYsMTcuODY2eiIvPg0KCQk8L2c+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=);
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9ImRvd25fMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSIwIDAgNjQgNjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnIGlkPSJEb3duX3g0MF8yeC5wbmdfMV8iPg0KCTxnIGlkPSJkaXJlY3Rkb3duX2NvcHkiPg0KCQk8Zz4NCgkJCTxwYXRoIGZpbGw9IiM5Njk4OTkiIGQ9Ik01NS4wNjYsMTcuODY2Yy0wLjUzMy0wLjkzNC0xLjQ2Ny0xLjUzMy0yLjUzMy0xLjZDNTIuMzk4LDE2LjE5OSw0Mi4zOTgsMTUuNiwzMiwxNS42DQoJCQkJYy0xMC4zOTksMC0yMC40LDAuNi0yMC41MzMsMC42NjdjLTEuMDY2LDAuMDY2LTIuMDY2LDAuNjY2LTIuNTMzLDEuNmMtMC41MzMsMC45MzQtMC41MzMsMi4wNjYsMCwzDQoJCQkJYzcuOTMzLDE0LjA2NiwyMC40LDI2LjI2NywyMC45MzMsMjYuNzMyYzEuMiwxLjA2NiwzLjA2NiwxLjA2Niw0LjI2NywwYzAuNTMzLTAuNDY3LDEzLTEyLjY2NiwyMC45MzMtMjYuNzMyDQoJCQkJQzU1LjYsMTkuOTMzLDU1LjYsMTguOCw1NS4wNjYsMTcuODY2eiIvPg0KCQk8L2c+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=);
+                background-repeat: no-repeat;
+                background-position: 95% 50%;
+                background-size: 16px 16px,100% 100%;
+                padding: .5rem .5rem ;
+                display: inline-block;
+                width: 12.5rem;
+                line-height:15px;
+                
+                color: rgb(22, 50, 92);
+                font-size: .8125rem;
+                border: 1px solid rgb(216, 221, 230);
+                border-radius: .25rem;
+                
+                }
+            </style>
+            
+        </head>
+        <apex:includeScript value="{!$Resource.mustache}" />
+        
+        <script type="text/javascript">
+        // Hide the output component (the param) and the pencil icon. 
         // Find the corresponding input component (same index in the ID)
         // Show the input component.
         function tryHide(component) {
             component.style.display = "none";
-            var outputComponentId = component.id.replace("quotaOutput","quotaInput");
-            document.getElementById(outputComponentId).style.display = "inline";            
+            var outputComponentId = component.id.replace("Output","Input");
+            document.getElementById(outputComponentId).style.display = "inline";
+            //var pencilComponentId = component.id.replace("quotaOutput","pencilIcon").replace("currencyOutput","currencyPencilIcon");
+            //document.getElementById(pencilComponentId).style.display = "none";
         }
         
-        function pencil(component, showhide) {
-            var pencilIconId = component.id.replace("quotaOutput","pencilIcon");
-            document.getElementById(pencilIconId).style.display = showhide;
+        function tryHidePencil(component) {
+            var outputComponentId = component.id.replace("pencilIcon","quotaOutput").replace("currencyPencilIcon","currencyOutput");
+            tryHide(document.getElementById(outputComponentId));
         }
         
-    </script>
+        function markDeleted(component) {
+        	var quotaIdComponent = component.id.replace("trashIcon", "col0-");
+            document.getElementById(quotaIdComponent).dataset.markDeleted = "true";
+            component.style.display = "none";
+            document.getElementById(component.id.replace("trashIcon", "quotaOutput")).style.display = "none";            
+            document.getElementById(component.id.replace("trashIcon", "quotaInput")).style.display = "none";
+            document.getElementById(component.id.replace("trashIcon", "pencilIcon")).style.display = "none";            
+        }
+        
+        function toggleUnderline(component) {
+            var options = ["underline", "none"];
+            component.style.textDecoration = component.style.textDecoration === options[0] ? options[1] : options[0];
+        }
+        
+        function fetchQuotas() {
+            document.getElementById("responseErrors").innerHTML = "";
+            var typeSelector = document.getElementById("{!$Component.optionsForm.forecastingTypeSelector}");
+            var typeId = typeSelector.options[typeSelector.selectedIndex].value;
+            
+            var periodSelector = document.getElementById("{!$Component.optionsForm.periodSelector}");
+            var periodId = periodSelector.options[periodSelector.selectedIndex].value;
+            
+            var productFamilySelector = document.getElementById("{!$Component.optionsForm.productFamilyList}");
+            var productFamily = productFamilySelector.options[productFamilySelector.selectedIndex].value;
+            
+            var roleIds = document.getElementById("{!$Component.optionsForm.roleTree}").childNodes[0].value.split(",");
+            if ((roleIds.length == 1) && (roleIds[0].length == 0))
+                roleIds = [];
+            
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.QuotaController.refreshQuotas}',
+                typeId,
+                periodId,
+                productFamily,
+                roleIds,
+                populateQuotasTable,
+                
+                {escape: false}
+            );    
+        }
+        
+        var quotasList = null;
+        var currencyColumn = false;
+        var readOnly = false;
+        
+        function populateQuotasTable(result, event) {
+            if (event.status) {
+                quotasList = result.quotaRows;
+                readOnly = result.readOnly;
+                
+                var title = document.getElementById("quotaTableTitle");
+                title.innerHTML = "{!$Label.QE_Quotas_For_Period} " + result.periodName;
+                title.style.display = "";
+                
+                document.getElementById("quotaTableColumnHeader1").innerHTML = result.columnHeaders[0];
+                document.getElementById("quotaTableColumnHeader2").innerHTML = result.columnHeaders[1];
+                var column3header = document.getElementById("quotaTableColumnHeader3");
+                currencyColumn = result.columnHeaders.length > 2 ? result.columnHeaders[2] : null;
+                var currencyCodes = [];
+                if (currencyColumn) {
+                    column3header.innerHTML = currencyColumn;
+                    column3header.style.display = "";
+                    
+                    for (var key in result.currencyCodes) {
+                        currencyCodes.push(result.currencyCodes[key]);
+                    }                
+                } else {
+                    column3header.style.display = "none";    
+                }
+                
+                var tableBody = document.getElementById("quotaTable2Body");
+                tableBody.innerHTML = "";
+                result.quotaRows.forEach(function(row, index) {
+                    var substituteValues = { "col0" : row.quotaId, "col1" : row.ownerName, "col2" : row.amount, 
+                                            "col2-formatted" : (row.amount == null ? "{!$Label.QE_Value_Not_set}" : row.amount),
+                                            "col3" : row.currencyIsoCode,
+                                            "displayCol3" : column3header.style.display,
+                                            "rowNum" : index,
+                                            "displayReadWrite" : readOnly ? "none" : "inline",
+                                           };
+                    var template = document.getElementById("tableRowTemplate").innerHTML;
+                    Mustache.parse(template);
+                    var rendered = Mustache.render(template, substituteValues);
+                    tableBody.innerHTML += rendered;
+                });
+                
+                if (currencyColumn) {
+                    result.quotaRows.forEach(function(row, index) {
+                        var currencySelects = document.getElementById("currencyInput"+index);
+                        currencyCodes.forEach(function(currencyCode, index) {
+                        	var el = document.createElement("option");
+                        	el.text = currencyCode;
+                            el.value = currencyCode;
+                            el.selected = currencyCode == row.currencyIsoCode;
+                        	currencySelects.appendChild(el);
+                        });
+                    });
+                }
+                
+                document.getElementById("quotaTable2").style.display = "inline"; 
+                if (!readOnly)
+                	document.getElementById("submitButtonArea").style.display = "inline";
+     
+                
+            } else if (event.type === 'exception') {
+                document.getElementById("responseErrors").innerHTML = 
+                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else if (event.hasOwnProperty("column3header")) {
+                document.getElementById("responseErrors").innerHTML = event.message;
+            }
+        }
+        
+        
+        function saveQuotas() {
+            document.getElementById("saveErrorMessage").innerHTML = "";
+            var tableBody = document.getElementById("quotaTable2Body");
+            var rows = tableBody.getElementsByClassName("divTableRow"); 
+            
+            var periodSelector = document.getElementById("{!$Component.optionsForm.periodSelector}");
+            var periodId = periodSelector.options[periodSelector.selectedIndex].value;
+            
+            for (var i = 0; i < rows.length; i++) {
+                cells = rows[i].getElementsByClassName("divTableCell");
+                quotasList[i].amount = cells[2].getElementsByTagName("input").item(0).value;
+                if (quotasList[i].amount == "")
+                    quotasList[i].amount = 0;
+                if (currencyColumn) {
+                	quotasList[i].currencyIsoCode = cells[3].getElementsByTagName("select").item(0).value;   
+                }
+                if (cells[0].dataset.markDeleted == "true")
+                    quotasList[i].isDeleted = "true";
 
-	<apex:form rendered="{!NOT(ForecastingEnabled)}">
-		<apex:outputText style="color:red;font-weight:bold"
-			value="{!$Label.QE_Forecasting_Disabled}" />
-	</apex:form>
-	<apex:form rendered="{!ForecastingEnabled}">
-		<apex:sectionHeader title="{!$Label.QE_Title}"
-			subtitle="{!$Label.QE_SubTitle}" />
-		<apex:panelGrid columns="2">
-
-			<apex:outputPanel>
-				<apex:actionStatus style="color:red;font-weight:bold"
-					id="updatingStatus" startText=" {!$Label.QE_Status_Refreshing}"
-					stopText="" />
-			</apex:outputPanel>
-
-			<apex:outputPanel>
-				<apex:outputText style="color:blue" value="{!headerMessage}" />
-			</apex:outputPanel>
-
-			<apex:outputText style="vertical-align:middle"
-				value="{!$Label.QE_PeriodOptions}" />
-
-			<apex:outputPanel>
-				<apex:selectRadio value="{!selectedPeriodType}">
-					<apex:actionSupport event="onchange"
-						reRender="quotaTable,periodSelector" status="updatingStatus" />
-					<apex:selectOptions value="{!availablePeriodTypes}" />
-				</apex:selectRadio>
-			</apex:outputPanel>
-
-			<apex:outputText value="{!$Label.QE_PeriodDateRange}" />
-
-			<apex:outputPanel id="periodSelector" style="padding-top:15px">
-				<apex:selectList value="{!startDatePeriod}" multiSelect="false"
-					size="1">
-					<apex:actionSupport event="onchange" reRender="quotaTable"
-						status="updatingStatus" />
-					<apex:selectOptions value="{!availablePeriods}" />
-				</apex:selectList>
-				<!--<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>-->
-			</apex:outputPanel>
-
-			<apex:outputPanel>
-				<apex:outputText value="{!$ObjectType.ForecastingType.Label}" />&nbsp;
-            </apex:outputPanel>
-
-			<apex:outputPanel>
-				<apex:selectList value="{!selectedForecastingType}"
-					multiSelect="false" size="1">
-					<apex:actionSupport event="onchange"
-						reRender="quotaTable,productFamilyOutputPanel,productFamilyOutputPanelLabel"
-						status="updatingStatus" />
-					<apex:selectOptions value="{!activeForecastingTypes}" />
-				</apex:selectList>&nbsp;
-	        </apex:outputPanel>
-
-			<apex:outputPanel id="productFamilyOutputPanelLabel"
-				rendered="{!isProductFamily}">
-				<apex:outputText value="{!$ObjectType.Product2.fields.Family.Label}" />
-			</apex:outputPanel>
-
-			<apex:outputPanel id="productFamilyOutputPanel"
-				rendered="{!isProductFamily}">
-
-				<apex:selectList value="{!selectedProductFamily}"
-					id="productFamilyList" multiSelect="false" size="1"
-					disabled="{!NOT(usesFamilies)}">
-					<apex:actionSupport event="onchange" reRender="quotaTable"
-						status="updatingStatus" />
-					<apex:selectOptions value="{!productFamilies}" />
-				</apex:selectList>
-			</apex:outputPanel>
-		</apex:panelGrid>
-
-		<apex:outputPanel id="quarterlyPopup">
-			<apex:outputPanel styleClass="popupBackground" layout="block"
-				rendered="{!displayPopUp}" />
-			<apex:outputPanel styleClass="custPopup" layout="block"
-				rendered="{!displayPopUp}">
-                {!$Label.QE_Quarterly_explanation}
+            }
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.QuotaController.saveRemoteAction}',
+                quotasList,
+                periodId,
+                saveConfirmation,
+                {escape: false}
+            );
+        }
+        
+        function saveConfirmation(result, event) {
+            if (event.status) {
+                var saveSuccessDiv = document.getElementById("saveSuccessfulMessage");
+                saveSuccessDiv.style.display = "inline";
+                setTimeout(function() { saveSuccessDiv.style.display = "none"; }, 3000);
+                
+                
+                
+                
+            } else if (event.type === 'exception') {
+                document.getElementById("saveErrorMessage").innerHTML = 
+                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else if (event.hasOwnProperty("column3header")) {
+                document.getElementById("saveErrorMessage").innerHTML = event.message;
+            }
+        }
+        
+        function copyConfirmation(result, event) {
+            if (event.status) {
+                var copySuccessDiv = document.getElementById("copySuccessfulMessage");
+                copySuccessDiv.style.display = "inline";
+                setTimeout(function() { copySuccessDiv.style.display = "none"; }, 3000);
+               
+            } else if (event.type === 'exception') {
+                document.getElementById("copyErrorMessage").innerHTML = 
+                    event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else if (event.hasOwnProperty("column3header")) {
+                document.getElementById("copyErrorMessage").innerHTML = event.message;
+            }
+        }
+        
+        function applyToFuturePeriod() {
+			document.getElementById("copyErrorMessage").innerHTML = "";
+            var tableBody = document.getElementById("quotaTable2Body");
+            var rows = tableBody.getElementsByClassName("divTableRow"); 
+            
+            for (var i = 0; i < rows.length; i++) {
+                cells = rows[i].getElementsByClassName("divTableCell");
+                quotasList[i].amount = cells[2].getElementsByTagName("input").item(0).value;
+                if (quotasList[i].amount == "")
+                    quotasList[i].amount = 0;
+                if (currencyColumn) {
+                	quotasList[i].currencyIsoCode = cells[3].getElementsByTagName("select").item(0).value;   
+                }
+                if (cells[0].dataset.markDeleted == "true")
+                    quotasList[i].isDeleted = "true";
+            }
+            
+            var typeSelector = document.getElementById("{!$Component.optionsForm.forecastingTypeSelector}");
+            var typeId = typeSelector.options[typeSelector.selectedIndex].value;
+            
+            var futurePeriodSelector = document.getElementById("{!$Component.submitForm.futurePeriodSelector}");
+            var futurePeriodId = futurePeriodSelector.options[futurePeriodSelector.selectedIndex].value;
+            
+            var productFamilySelector = document.getElementById("{!$Component.optionsForm.productFamilyList}");
+            var productFamily = productFamilySelector.options[productFamilySelector.selectedIndex].value;
+            
+            var roleIds = document.getElementById("{!$Component.optionsForm.roleTree}").childNodes[0].value.split(",");
+            if ((roleIds.length == 1) && (roleIds[0].length == 0))
+                roleIds = [];
+            
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.QuotaController.saveToPeriodRemoteAction}',
+                typeId,
+                futurePeriodId,
+                productFamily,
+                roleIds,
+                quotasList,
+                copyConfirmation,
+                {escape: false}
+            );            
+        }
+        
+        function onChangeForecastingType() {
+            var typeSelector = document.getElementById("{!$Component.optionsForm.forecastingTypeSelector}");
+            var typeName = typeSelector.options[typeSelector.selectedIndex].label;
+            
+            var disableProductFamily = typeName.indexOf("Line Item") == -1;
+            
+            var productFamilySelector = document.getElementById("{!$Component.optionsForm.productFamilyList}");
+            productFamilySelector.disabled = disableProductFamily;
+        }
+        
+        function displayProductFamilyDropdown() {
+            
+        }
+        
+        
+        </script>
+        <body style="padding:0">
+            <div class="slds">
+                
+                <script id="tableRowTemplate" type="x-tmpl-mustache">
+                
+                <div class="divTableRow"> 
+                    <div class="divTableCell" id="col0-{{rowNum}}" style="display:none" data-mark-deleted="false">{{col0}}</div>
+                    <div class="divTableCell" id="col1-{{rowNum}}">{{col1}}</div>
+                    <div class="divTableCell" id="quotaCell{{rowNum}}">
+                        <input id="quotaInput{{rowNum}}" type="number" value="{{col2}}" style="display:none; width:100px;" />
+                        <span id="quotaOutput{{rowNum}}" onmouseover="{toggleUnderline(this);}" onmouseout="{toggleUnderline(this);}" 
+                        	  onclick="{tryHide(this);}" style="color:blue;text-decoration:none;display:inline">{{col2-formatted}}</span>
+                        <span style="float:right">
+                            <span id="pencilIcon{{rowNum}}" onclick="{tryHidePencil(this);}" style="display:{{displayReadWrite}}">
+                                <svg aria-hidden="true" class="slds-button slds-icon--x-small" style="fill: #8A8A8A;">
+                                    <use xlink:href="{!URLFOR($Resource.slds, '/assets/icons/utility-sprite/svg/symbols.svg#edit')}"></use>
+                                </svg>
+                            </span> 
+                            <span id="trashIcon{{rowNum}}" onclick="{markDeleted(this);}" style="display:{{displayReadWrite}}">
+                                <svg aria-hidden="true" class="slds-button slds-icon--x-small" style="fill: #8A8A8A;">
+                                    <use xlink:href="{!URLFOR($Resource.slds, '/assets/icons/utility-sprite/svg/symbols.svg#delete')}"></use>
+                                </svg>
+                            </span>
+                        </span>
+                            
+                    </div>
+                    <div class="divTableCell" id="currencyCol-{{rowNum}}" style="display:{{displayCol3}}">
+                        <select id="currencyInput{{rowNum}}" class="currencySelect" style="display:none">
+                        </select>
+                        <span id="currencyOutput{{rowNum}}" onmouseover="{toggleUnderline(this);}" onmouseout="{toggleUnderline(this);}" 
+                        	  onclick="{tryHide(this);}" style="color:blue;text-decoration:none;display:inline">{{col3}}</span>
+                        <span style="float:right">
+                            <span id="currencyPencilIcon{{rowNum}}" onclick="{tryHidePencil(this);}" style="display:{{displayReadWrite}}">
+                                <svg aria-hidden="true" class="slds-button slds-icon--x-small" style="fill: #8A8A8A;">
+                                    <use xlink:href="{!URLFOR($Resource.slds, '/assets/icons/utility-sprite/svg/symbols.svg#edit')}"></use>
+                                </svg>
+                            </span>    
+    					</span> 
+                    </div>
+                </div>
+                </script>
+                
+                <script id="currencyDropdown" type="x-tmpl-mustache">
+                
+                </script>
+                
+                
+                <apex:form rendered="{!NOT(ForecastingEnabled)}">
+                    <apex:outputText style="color:red;font-weight:bold"
+                                     value="{!$Label.QE_Forecasting_Disabled}" />
+                </apex:form>
+                <div class="slds-page-header " role="banner">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <svg aria-hidden="true" class="slds-icon slds-icon-standard-forecasts">
+                                <use xlink:href="{!URLFOR($Resource.slds, 'assets/icons/standard-sprite/svg/symbols.svg#forecasts')}"></use>
+                            </svg>
+                        </div>
+                        <div class="slds-media__body">
+                            <p class="slds-page-header__title slds-truncate" title="{!$Label.QE_Title}">{!$Label.QE_Title}</p>
+                            <p class="slds-text-body--small">{!$Label.QE_SubTitle}</p>
+                        </div>
+                    </div>
+                </div>
+                <apex:form id="optionsForm" rendered="{!ForecastingEnabled}" >
+                    
+                    
+                    <div class="slds-grid slds-wrap slds-m-top--large">
+                        
+                        
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+                            <apex:actionStatus style="color:red;font-weight:bold"
+                                               id="updatingStatus" startText=" {!$Label.QE_Status_Refreshing}"
+                                               stopText="" />
+                        </div>
+                        
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 ">
+                
+                       
+                                <div class="slds-text-title" stye="color:$color-background-modal-brand;">{!headerMessage}</div>
+                          
+                            <!-- KA -   <div class="slds-text-heading--small">{!headerMessage}</div>  --> 
+                            
+                            
+                            
+                        </div>
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12 slds-p-top--x-small">
+                            
+                            
+                            {!$Label.QE_PeriodOptions}
+                        </div>
+                        
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 slds-p-top--x-small">
+                            
+                            <apex:selectRadio value="{!selectedPeriodType}">
+                                
+                                <apex:actionSupport event="onchange"
+                                                    reRender="periodSelectorPanel" status="updatingStatus" />
+                                <apex:selectOptions value="{!availablePeriodTypes}" />
+                            </apex:selectRadio>
+                            
+                            
+                        </div>       
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12 slds-p-top--x-small">
+                            
+                            {!$Label.QE_PeriodDateRange}
+                        </div>
+                        
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 slds-p-top--x-small">
+                            
+                            <apex:selectList id="periodSelector" multiSelect="false" styleClass="sf1select"
+                                             size="1" > <!-- value="{!currentPeriodId}" -->
+                                <apex:actionSupport event="onchange" reRender=""
+                                                    status="updatingStatus" />
+                                <apex:selectOptions value="{!availablePeriods}" />
+                            </apex:selectList>
+                            <!--<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>-->
+                        </div>
+                        
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12 slds-p-top--x-small">
+                            
+                            <apex:outputText value="{!$ObjectType.ForecastingType.Label}" />&nbsp;
+                        </div>
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 slds-p-top--x-small">
+                            
+                            <apex:outputPanel id="forecastingTypePanel">
+                                <apex:selectList id="forecastingTypeSelector"   styleClass="sf1select"
+                                                 multiSelect="false" size="1" onchange="onChangeForecastingType()">
+                                    <apex:selectOptions value="{!activeForecastingTypes}" />
+                                    <apex:actionSupport event="onload" rerender="" onsubmit="onChangeForecastingType()"/>
+                                </apex:selectList>&nbsp;
+                            </apex:outputPanel>
+                        </div>
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12 slds-p-top--x-small">
+                            
+                            <apex:outputPanel id="productFamilyOutputPanelLabel">
+                                <!--                              rendered="{!isProductFamily}"> -->
+                                <apex:outputText value="{!$ObjectType.Product2.fields.Family.Label}" />
+                            </apex:outputPanel>
+                        </div>
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 slds-p-top--x-small">
+                            
+                            <apex:outputPanel id="productFamilyOutputPanel">
+                                <!--                              rendered="{!isProductFamily}"> -->
+                                
+                                <apex:selectList value="{!selectedProductFamily}"  styleClass="sf1select"
+                                                 id="productFamilyList" multiSelect="false" size="1"
+                                                 disabled="{!NOT(usesFamilies)}">
+                                    <apex:actionSupport event="onchange" reRender=""
+                                                        status="updatingStatus" />
+                                    <apex:selectOptions value="{!productFamilies}" />
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </div>
+                        
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12 slds-p-top--x-small">
+                            
+                            {!$Label.QE_Roles} 
+                        </div>
+                        
+                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 slds-p-top--x-small">
+                            <c:TreeView id="roleTree" selectable="true" roleOrUserId="{!rootRoleId}" value="{!selectedRoles}"/>
+                            <br/>
+                            <input type="button" onclick="fetchQuotas()" value="{!$Label.QE_Fetch_Quotas}" class="slds-button slds-button--brand slds-not-selected" aria-live="assertive"/>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                </apex:form>
                 <br />
-				<br />{!$Label.QE_Other_months_blank}<br />
-				<br />
-				<br />
-				<apex:commandButton value="{!$Label.site.submit}"
-					action="{!closePopup}" rerender="quarterlyPopup" />
-			</apex:outputPanel>
-		</apex:outputPanel>
-	</apex:form>
-	<br />
+                
+                <div id="responseErrors"> </div>
+                
+                <div id="tableContainer" >
+                    <div  id="quotaTable2" style="display:none" >
+                        
+                        <div id="quotaTableTitle" class="slds-m-bottom--small slds-section-title--divider" style="display:none"></div>
+                        
+                        <div class="divTableHeading slds-table slds-table--bordered slds-table--cell-buffer" >
+                            <div class="divTableRow" id="quotaTable2HeaderRow">
+                                <div class="divTableHead" id="quotaTableIdColumn" style="display:none"></div>
+                                <div class="divTableHead" id="quotaTableColumnHeader1" style="width: 250px">{!$ObjectType.User.fields.Name.Label}</div>
+                                <div class="divTableHead" id="quotaTableColumnHeader2" style="width: 160px;height:20px"></div><!--{!quotaColumnHeader}</div>-->
+                                <div class="divTableHead" id="quotaTableColumnHeader3" style="width: 130px">{!CurrencyColumnHeader}</div>
+                            </div>
+                        </div>
+                        <div class="divTableBody" id="quotaTable2Body">
+                        </div>
+                    </div>
+                    
+                    <apex:form id="submitForm">
+                        <div id="submitButtonArea" class="slds-m-top--large" style="display:none">
+                            
+                            <div class="slds-grid slds-wrap slds-m-top--large">
+                                
+                                
+                                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+                                </div>
+                                <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12">
+                                    <input type="button" onclick="saveQuotas()" value="{!$Label.site.submit}" class="slds-button slds-button--brand slds-not-selected" aria-live="assertive">
+                                    </input>
+                                    <div id="saveSuccessfulMessage" style="display:none; color:green; font-size:12">
+                                        Save successful!
+                                    </div>
+					                <div id="saveErrorMessage"> 
+                                	</div>
+                                    
+                                </div>
+                            </div>
+                            <div class="slds-m-top--large">
+                                <div class="slds-section-title--divider">
+                                    <h3>
+                                        {!$Label.QE_Copy_Quota}
+                                    </h3>
+                                    <!-- <div class="slds-grid slds-wrap slds-grid--pull-padded slds-m-top--large slds-m-left--large slds-m-right--large">
+<div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--6-of-12">    
+KA - <p class="slds-text-heading--small">{!$Label.QE_Copy_Quota}</p> 
+</div>
 
-	<apex:form id="quotaTable" rendered="{!ForecastingEnabled}">
-		<apex:pageBlock id="pageBlock"
-			title="{!$Label.QE_Quotas_For_Period} {!startDatePeriod}">
-			<apex:pageMessages />
-			<apex:pageBlockButtons id="pageBlockButtons">
-				<apex:commandButton value="{!$Label.site.submit}" action="{!save}"
-					disabled="{!saveDisabled}" />
-			</apex:pageBlockButtons>
-			<apex:pageBlockTable id="pageBlockTable" style="width:350px"
-				value="{!quotas}" var="q">
-				<apex:column id="nameColumn"
-					headerValue="{!$ObjectType.User.fields.Name.Label}">
-					<apex:outputText value="{!q.ownerName}" style="width:150px" />
-				</apex:column>
+<div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--6-of-12">
+--> 
+                                 </div>
+                                 <div>
+                                    <div class="slds-m-top--large" />
+                                    <apex:selectList id="futurePeriodSelector" value="{!futurePeriod}" multiSelect="false" size="1" styleClass="sf1select slds-m-left--small" >
+                                        <apex:selectOptions value="{!availablePeriods}" />
+                                    </apex:selectList>
+                                    <input type="button" onclick="applyToFuturePeriod()" value="{!$Label.site.submit}" class="slds-button slds-button--brand slds-not-selected" aria-live="assertive">
+                                    </input>
+                                    </div>
+                                    <div id="copySuccessfulMessage" style="display:none; color:green; font-size:12">
+                                        Copy successful!
+                                    </div>
+                        			<div id="copyErrorMessage"> 
+                                	</div>
 
-				<apex:column id="quotaColumn" headerValue="{!quotaColumnHeader}"
-					style="width:110px;height:20px">
-					<apex:outputPanel>
-						<apex:inputText id="quotaInput" size="11" value="{!q.amount}"
-							style="display:{!IF(ISNULL(q.amount),'inline','none')}" />
-						<apex:commandLink id="quotaOutput" onclick="{tryHide(this)}"
-							value="{!q.amountString}" rerender="none"
-							style="color:blue;text-decoration:none;display:{!IF(NOT(ISNULL(q.amount)),'inline','none')}"
-							onmouseover="{pencil(this,'inline')}"
-							onmouseout="{pencil(this,'none')}">
-						</apex:commandLink>
-						<apex:outputPanel style="float:right">
-							<apex:image id="pencilIcon"
-								value="/img/func_icons/util/pencil12.gif" style="display:none" />
-						</apex:outputPanel>
-					</apex:outputPanel>
-				</apex:column>
-				<apex:column id="currencyColumn"
-					headerValue="{!CurrencyColumnHeader}" style="width:100px"
-					rendered="{!RenderCurrencyColumn}">
-					<apex:selectList value="{!q.currencyIsoCode}" multiSelect="false"
-						size="1">
-						<apex:selectOptions value="{!AvailableIsoCodes}" />
-					</apex:selectList>
-				</apex:column>
-
-			</apex:pageBlockTable>
-		</apex:pageBlock>
-		<apex:pageBlock>
-			<apex:facet name="header">
-				<h2>{!$Label.QE_Copy_Quota}</h2>
-			</apex:facet>
-
-			<apex:outputText value="{!$Label.QE_Starting_Month}" />
-			<apex:selectList value="{!futurePeriod}" multiSelect="false" size="1">
-				<apex:actionSupport event="onchange" reRender="applyFutureButton" />
-				<apex:selectOptions value="{!availablePeriodsForApplyFuture}" />
-			</apex:selectList>
-			<apex:commandButton id="applyFutureButton"
-				value="{!$Label.site.submit}" disabled="{!isApplyToPeriodDisabled}"
-				action="{!applyToPeriod}" />
-		</apex:pageBlock>
-	</apex:form>
-
-	<style type="text/css">
-.custPopup {
-	background-color: white;
-	border-width: 2px;
-	border-style: solid;
-	z-index: 9999;
-	left: 50%;
-	padding: 10px;
-	position: absolute;
-	/* These are the 3 css properties you will need to change so the popup 
-            displays in the center of the screen. First set the width. Then set 
-            margin-left to negative half of what the width is. You can add 
-            the height property for a fixed size pop up if you want.*/
-	width: 500px;
-	margin-left: -250px;
-	top: 100px;
-}
-
-.popupBackground {
-	background-color: black;
-	opacity: 0.20;
-	filter: alpha(opacity = 20);
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	z-index: 9998;
-}
-</style>
+                                 </div>
+                            </div>
+                    </apex:form>    
+                </div>    
+                
+                
+                
+            </div>
+            <style type="text/css">
+                .custPopup {
+                background-color: white;
+                border-width: 2px;
+                border-style: solid;
+                z-index: 9999;
+                left: 50%;
+                padding: 10px;
+                position: absolute;
+                /* These are the 3 css properties you will need to change so the popup 
+                displays in the center of the screen. First set the width. Then set 
+                margin-left to negative half of what the width is. You can add 
+                the height property for a fixed size pop up if you want.*/
+                width: 500px;
+                margin-left: -250px;
+                top: 100px;
+                }
+                
+                .popupBackground {
+                background-color: black;
+                opacity: 0.20;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: 9998;
+                }
+                
+                .divTable{
+                display: table;
+                width: 100%;
+                }
+                .divTableRow {
+                display: table-row;
+                }
+                .divTableHeading {
+                background-color: #EEE;
+                display: table-header-group;
+                font-size: 0.9em;
+                font-weight: bold;
+                }
+                .divTableCell, .divTableHead {
+                border: 1px solid #999999;
+                display: table-cell;
+                padding: 3px 10px;
+                }
+                .divTableHeading {
+                background-color: #EEE;
+                display: table-header-group;
+                font-weight: bold;
+                font-size:12px;
+                }
+                .divTableFoot {
+                background-color: #EEE;
+                display: table-footer-group;
+                font-weight: bold;
+                }
+                .divTableBody {
+                display: table-row-group;
+                }
+                #bodyTable {
+                height: 2000px;
+                }
+                
+                
+            </style>
+            
+        </body>
+    </html>
 </apex:page>

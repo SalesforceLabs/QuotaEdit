@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customApplications>
+        <label>Modifier les Quotas</label>
+        <name>Edit_Quotas</name>
+    </customApplications>
     <customLabels>
         <label> Copier les quotas ci-dessus vers une autre période</label>
         <name>QE_Copy_Quota</name>
+    </customLabels>
+    <customLabels>
+        <label>Chercher des Quotas</label>
+        <name>QE_Fetch_Quotas</name>
     </customLabels>
     <customLabels>
         <label>Les prévisions n&apos;est pas activé ou non accessible.</label>
@@ -49,6 +57,10 @@
         <name>QE_Quota_EditReports</name>
     </customLabels>
     <customLabels>
+        <label><!-- QE_Quota_NoWritePerm --></label>
+        <name>QE_Quota_NoWritePerm</name>
+    </customLabels>
+    <customLabels>
         <label>Vous avez la permission de lire les quotas pour tous les utilisateurs de Prévisions autorisés, mais vous n&apos;avez pas la permission de les modifier</label>
         <name>QE_Quota_ViewAll</name>
     </customLabels>
@@ -57,12 +69,16 @@
         <name>QE_Quota_ViewReports</name>
     </customLabels>
     <customLabels>
-        <label>Quotas pour la période démarrant le</label>
+        <label>Quotas pour la période</label>
         <name>QE_Quotas_For_Period</name>
     </customLabels>
     <customLabels>
         <label>Chiffre d&apos;affaires</label>
         <name>QE_Revenue</name>
+    </customLabels>
+    <customLabels>
+        <label>Les rôles (ne cochez pas pour aller chercher les utilisateurs de tous les rôles)</label>
+        <name>QE_Roles</name>
     </customLabels>
     <customLabels>
         <label>Sélectionner le mois de début</label>
@@ -83,6 +99,10 @@
     <customLabels>
         <label>Utilisation des prévisions trimestrielles?</label>
         <name>QE_Using_quarterly_forecasts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- QE_Value_Not_set --></label>
+        <name>QE_Value_Not_set</name>
     </customLabels>
     <customTabs>
         <label>Modifier les Quotas</label>

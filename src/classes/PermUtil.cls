@@ -33,6 +33,9 @@ public class PermUtil {
         return forecastingEnabled;
     }
     
+    public static boolean isWriteAllowed() {
+    	return hasManageQuotas();    
+    }
     
     public static boolean isReadOnlyAll() {
         return hasViewAllForecasts() && !hasManageQuotas();

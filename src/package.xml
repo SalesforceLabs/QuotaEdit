@@ -1,16 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Edit_Quotas</members>
+        <name>CustomApplication</name>
+    </types>
     <types>
         <members>CalendarUtil</members>
         <members>CurrencyUtil</members>
         <members>ForecastingTypeUtil</members>
+        <members>LoadQuotasModel</members>
         <members>PermUtil</members>
         <members>ProductFamilyUtil</members>
-        <members>QuotaControllTest</members>
         <members>QuotaController</members>
+        <members>QuotaControllTest</members>
         <members>QuotaModel</members>
+        <members>RoleNodeModel</members>
         <members>RoleUtils</members>
+        <members>TreeViewController</members>
+        <members>TestPageController</members>
         <name>ApexClass</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomLabels</name>
     </types>
     <types>
         <members>QuotaEdit</members>
@@ -18,7 +30,13 @@
     </types>
     <types>
         <members>*</members>
-        <name>CustomLabels</name>
+        <name>PermissionSet</name>
+    </types>
+    <types>
+        <members>DynaTree</members>
+        <members>mustache</members>
+        <members>slds</members>
+        <name>StaticResource</name>
     </types>
     <types>
         <members>Edit_Quotas</members>
@@ -28,5 +46,5 @@
         <members>*</members>
         <name>Translations</name>
     </types>
-    <version>36.0</version>
+    <version>37.0</version>
 </Package>

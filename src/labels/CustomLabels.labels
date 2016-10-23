@@ -9,6 +9,14 @@
         <value>Copy the above quota to another time period</value>
     </labels>
     <labels>
+        <fullName>QE_Fetch_Quotas</fullName>
+        <categories>Button label for fetching quotas based on above parameters</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fetch quotas</shortDescription>
+        <value>Fetch Quotas</value>
+    </labels>
+    <labels>
         <fullName>QE_Forecasting_Disabled</fullName>
         <categories>QuotaEdit</categories>
         <language>en_US</language>
@@ -38,7 +46,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for header options</shortDescription>
-        <value>Forecasting period options</value>
+        <value>Forecasting period type</value>
     </labels>
     <labels>
         <fullName>QE_Products_Not_Categorized</fullName>
@@ -97,6 +105,13 @@
         <value>You have permission to view and edit quotas for Forecast Enabled users in your forecasting hierarchy</value>
     </labels>
     <labels>
+        <fullName>QE_Quota_NoWritePerm</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>QE_Quota_NoWritePerm</shortDescription>
+        <value>You do not have permission to write quotas.</value>
+    </labels>
+    <labels>
         <fullName>QE_Quota_ViewAll</fullName>
         <categories>QuotaEdit</categories>
         <language>en_US</language>
@@ -118,7 +133,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Quotas For Period</shortDescription>
-        <value>Quotas for period starting</value>
+        <value>Quotas for period</value>
     </labels>
     <labels>
         <fullName>QE_Revenue</fullName>
@@ -127,6 +142,13 @@
         <protected>true</protected>
         <shortDescription>Revenue</shortDescription>
         <value>Revenue</value>
+    </labels>
+    <labels>
+        <fullName>QE_Roles</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>QE_Roles</shortDescription>
+        <value>Roles (leave unchecked to fetch users from all roles)</value>
     </labels>
     <labels>
         <fullName>QE_Starting_Month</fullName>
@@ -167,5 +189,12 @@
         <protected>true</protected>
         <shortDescription>Using quarterly forecasts</shortDescription>
         <value>Using quarterly forecasts?</value>
+    </labels>
+    <labels>
+        <fullName>QE_Value_Not_set</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>QE_Value_Not_set</shortDescription>
+        <value>not set</value>
     </labels>
 </CustomLabels>

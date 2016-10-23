@@ -20,10 +20,15 @@ public with sharing class CurrencyUtil {
         return multiCurrencyOrg;
     }
     
+    private static String userDefaultCurrency = null;
+    
     public static String getUserDefaultCurrency(Id userId) {
+    	if (userDefaultCurrency == null) {
         // Can't use SOQL bracket syntax because it will not compile on mono-currency orgs
         List<SObject> res = Database.query('SELECT DefaultCurrencyIsoCode FROM User WHERE Id=:userId');
-        return res.size() == 1 ? (String)res.get(0).get('DefaultCurrencyIsoCode') : null;
+        userDefaultCurrency = res.size() == 1 ? (String)res.get(0).get('DefaultCurrencyIsoCode') : null;
+    	}
+    	return userDefaultCurrency;
     }
     
 }

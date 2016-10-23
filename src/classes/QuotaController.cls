@@ -1,36 +1,43 @@
 public with sharing class QuotaController {
 	
-	Date startDate = null;
-	Id forecastingTypeId = null;
-	ForecastingType selectedType = null;
-	
-	
-	public String periodType = 'Month';
-	public Boolean forecastingEnabled = true;
-	public Date futureDate = null;
+  	// Static variables. Should be able to be access beyond the first call
+	public static final Boolean forecastingEnabled = isForecastingEnabledFirstTimeCheck(); 
+	public static final Id thisUserId = Id.valueOf(UserInfo.getUserId());
+    public static final Id currentPeriodId = CalendarUtil.getPeriodForNow('Month');
+
+   	public static Map<Id, QuotaModel> quotaMap = new Map<Id, QuotaModel>();
+
+
+	// Getters for all the static variables
+    public static Id getThisUserId() {
+        return thisUserId;
+    }
+    
+	public static boolean getForecastingEnabled() {
+		return forecastingEnabled;
+	}
+    
+    
+	// Variables only needed for first-time load / defaults
+	String periodType = '';
+	Id futurePeriod = null;
 	public String isQuantityString = 'false';
-	public Map<Id, QuotaModel> quotaMap = new Map<Id, QuotaModel>();
 	public String selectedPFString = '';
 
 
 	public QuotaController() {
-		forecastingEnabled = isForecastingEnabled();
 		if (!forecastingEnabled)
 			return;
-		startDate = CalendarUtil.getPeriodForNow(periodType);
-		forecastingTypeId = ForecastingTypeUtil.types.get(0) == null ? 'null' : ForecastingTypeUtil.types.get(0).Id;
-		selectedType = ForecastingTypeUtil.types.get(0);
-		futureDate = CalendarUtil.getPeriodForNow(periodType);
+        // Initialize periodType based on this call:
+        getAvailablePeriodTypes();
+		futurePeriod = CalendarUtil.getPeriodForNow(periodType);
 		getQuotas();
 	}
 	
-	public boolean getForecastingEnabled() {
-		return forecastingEnabled;
-	}
 	
 	// Avoid runtime errors by checking in advance whether
 	// Forecasting is enabled in the org
-	private Boolean isForecastingEnabled() {
+	private static Boolean isForecastingEnabledFirstTimeCheck() {
 		String[] types = new String[]{'ForecastingItem','ForecastingQuota'};
 		Schema.DescribeSobjectResult[] results = Schema.describeSObjects(types);
 		
@@ -42,14 +49,11 @@ public with sharing class QuotaController {
 			if (!res.isAccessible())
 				return false;
 		}
-		if (ForecastingTypeUtil.types == null || 
-			ForecastingTypeUtil.types.size() == 0)
+		if (ForecastingTypeUtil.getNumberOfTypes() == 0)
 			return false;
 		return true;
 	}
-	
-	
-	
+		
 	public void onCheckProductFamily() {
 	}
 	
@@ -90,61 +94,24 @@ public with sharing class QuotaController {
 	public void setSelectedPeriodType(String selectedPeriod) {
 		periodType = selectedPeriod;
 	}
-	
-	public String getSelectedForecastingType() {
-		return forecastingTypeId;
-	}
-	
-	public void setSelectedForecastingType(Id selectedId) {
-		forecastingTypeId = selectedId;
-		selectedType = ForecastingTypeUtil.getForecastingTypeById(selectedId);
-	}
-	
-	public void onChangeForecastType() {
-		selectedType = ForecastingTypeUtil.getForecastingTypeById(forecastingTypeId);
-	}
-	
-	public String getStartDatePeriod() {
-		return startDate.format();
-	}
-	
+			
 	public void setStartDatePeriod(String startDateStr) {
 		Date inputDate = Date.parse(startDateStr);
-		this.startDate = Date.newInstance(inputDate.year(), inputDate.month(), inputDate.day());
 		quotaMap.clear();
 	}
 	
-	public String getFuturePeriod() {
-		return futureDate.format();
+	public Id getFuturePeriod() {
+		return futurePeriod;
 	}
 	
-	public void setFuturePeriod(String futurePeriodStr) {
-		if (futurePeriodStr == null) return;
-		
-		Date inputDate = Date.parse(futurePeriodStr);
-		futureDate = Date.newInstance(inputDate.year(), inputDate.month(), inputDate.day());
-	}
-	
-	public Boolean isQuantity() {
-		return selectedType.IsQuantity;
-	}
-	
-	public Boolean isProductFamily() {
-		return selectedType.DeveloperName.contains('LineItem');
-	}
-	
-	public String getDeveloperName() {
-		return selectedType.DeveloperName;
+	public void setFuturePeriod(Id newFuturePeriod) {	
+        futurePeriod = newFuturePeriod;
 	}
 	
 	public Boolean getUsesFamilies() {
 		return ProductFamilyUtil.usesFamilies();
 	}
-	
-	public Boolean getIsProductFamily() {
-		return isProductFamily();
-	}
-	
+		
 	public String getSelectedProductFamily() {
 		return selectedPFString;
 	}
@@ -169,50 +136,87 @@ public with sharing class QuotaController {
 			ret.sort();
 			return ret;
 		}
-		
-		System.debug(loggingLevel.INFO, 'Fetching quotas for date=' + startDate + ', isQuantity=' + isQuantity());
-		return getQuotasForPeriod(startDate, quotaMap);
+		return null;
 	}
 	
-	public List<QuotaModel> getQuotasForPeriod(Date startDate, Map<Id, QuotaModel> quotaMapForFetch) {
-	
-		List<User> forecastUsers = new List<User>();
-		quotaMapForFetch.clear();
-		
-		// Someone with "View All Forecasts" and "Manage Quotas" should
-		// be able to see and set the quotas of all the Forecasting Enabled
-		// users.
-		if (PermUtil.isReadWriteAll() || PermUtil.isReadOnlyAll()) {
-			forecastUsers = [SELECT Id, Name FROM User WHERE IsActive = TRUE AND ForecastEnabled = TRUE LIMIT 999];
+    private static List<User> getForecastUsers(Set<Id> roleIds) {
+        List<User> forecastUsers;
+        
+        if (roleIds.size() == 0) {
+            if (PermUtil.isReadWriteAll() || PermUtil.isReadOnlyAll()) {
+                // Someone with "View All Forecasts" and "Manage Quotas" should
+                // be able to see and set the quotas of all the Forecasting Enabled
+                // users.
+				forecastUsers = RoleUtils.getForecastUsersByRoleIds(new Set<Id>(), isMultiCurrencyOrg, true);
+            }
+            else {
+                forecastUsers = RoleUtils.getRoleSubordinateUsers(thisUserId, isMultiCurrencyOrg);    
+            }               
 		}
-		else if (PermUtil.isReadWriteBelowMe() || PermUtil.isReadOnlyBelowMe()) {
-			// Traverse the role hierarchy and find all the subordinates.
-			forecastUsers = RoleUtils.getRoleSubordinateUsers(Id.valueOf(UserInfo.getUserId()));
+		else {
+			forecastUsers = RoleUtils.getForecastUsersByRoleIds(roleIds, isMultiCurrencyOrg, false);
 		}
-		
+        return forecastUsers;
+    }
+
+    @RemoteAction
+    public static LoadQuotasModel refreshQuotas(final Id forecastingTypeId, final Id periodId, final String selectedProductFamily, List<Id> roleIds) {
+        Period period = CalendarUtil.getPeriodById(periodId);
+        ForecastingType fType = ForecastingTypeUtil.getForecastingTypeById(forecastingTypeId);
+        System.debug(loggingLevel.INFO, 'Refresh quotas for period=' + period.Id + ', isQuantity=' + fType.IsQuantity);
+        System.debug(loggingLevel.INFO, 'Role IDs (' + roleIds.size() + ')=' + roleIds);
+		List<QuotaModel> quotas = refreshQuotas(periodId, fType, selectedProductFamily, roleIds);
+        
+        List<String> columnHeaders = new List<String>();
+        columnHeaders.add(getNameColumnHeader());
+        columnHeaders.add(getQuotaColumnHeader(fType.IsQuantity));
+        
+        Map<String,String> currencyCodes = new Map<String,String>();
+        
+        if (isMultiCurrencyOrg && fType.IsAmount) {
+            columnHeaders.add(getCurrencyColumnHeader());
+            for (SelectOption so : availableIsoCodes) {
+                currencyCodes.put(so.getLabel(), so.getValue());
+            }    
+        }
+        LoadQuotasModel ret = new LoadQuotasModel(period.FullyQualifiedLabel, columnHeaders, quotas, currencyCodes, !PermUtil.isWriteAllowed());
+        return ret;
+
+    }
+    
+	private static List<QuotaModel> refreshQuotas(final Id periodId, final ForecastingType forecastingType, final String selectedProductFamily, List<Id> roleIds) {
+        
+        Boolean isQuant = forecastingType.IsQuantity;
+        Boolean isProductFamily = ForecastingTypeUtil.isProductFamily(forecastingType);
+        Id forecastingTypeId = forecastingType.Id;
+        
+        System.debug(loggingLevel.INFO, 'Fetching quotas for period=' + periodId + ', isQuantity=' + forecastingType.IsQuantity);
+        quotaMap.clear();
+        
+        
+		List<User> forecastUsers = getForecastUsers(roleIds.size() == 0 ? new Set<Id>() : new Set<Id>(roleIds));
 		// Create blank quota records for all users
 		for (User user : forecastUsers) {
 			System.debug('Name = ' + user.Name + ', Id=' + User.Id);
 			QuotaModel quota = new QuotaModel();
 			quota.ownerName = user.Name;
 			quota.ownerId = user.Id;
-			quota.startDate = startDate;
-			quota.isQuantity = isQuantity();
-			quota.currencyIsoCode = isMultiCurrencyOrg ? CurrencyUtil.getUserDefaultCurrency(quota.OwnerId) : null;
-			quota.productFamily = isProductFamily() ? selectedPFString : null;
-			quotaMapForFetch.put(user.Id, quota);
+            quota.periodId = periodId;
+			quota.isQuantity = isQuant;
+			quota.currencyIsoCode = isMultiCurrencyOrg ? (String)((SObject)user).get('DefaultCurrencyIsoCode') : null;
+			quota.productFamily = isProductFamily ? selectedProductFamily : null;
+            quota.forecastingTypeId = forecastingTypeId;
+			quotaMap.put(user.Id, quota);
 		}
 		
-		Set<Id> userIds = quotaMapForFetch.keySet();
-		Boolean isQuant = isQuantity();
-		String productFamilyStr = selectedPFString;
+		Set<Id> userIds = quotaMap.keySet();
 		
 		// We have to use this clunky query creation, rather than using
 		// the [SELECT... ] method, because if we reference CurrencyIsoCode
 		// in a mono-currency org, we'll get a runtime error.
 		String query = 'SELECT Id, QuotaOwnerId, PeriodId';
 		
-		if (isQuantity()) {
+		if (isQuant) {
 			query += ', QuotaQuantity';
 		}
 		else {
@@ -223,13 +227,13 @@ public with sharing class QuotaController {
 			query += ', CurrencyIsoCode';
 			
 		query += ' FROM ForecastingQuota WHERE QuotaOwnerId IN :userIds';
-		query += ' AND StartDate=:startDate';
+		query += ' AND PeriodId=:periodId';
 		query += ' AND isQuantity=:isQuant';
 		query += ' AND ForecastingTypeId=:forecastingTypeId';
 		
 		
-		if (isProductFamily()) {
-			query += ' AND ProductFamily=:productFamilyStr';
+		if (isProductFamily) {
+			query += ' AND ProductFamily=:selectedProductFamily';
 		}
 		else {
 			query += ' AND ProductFamily=\'\'';
@@ -239,63 +243,56 @@ public with sharing class QuotaController {
 		
 		for (SObject sobj : quotasFromDB) {
 			Id userId = (Id) sobj.get('QuotaOwnerId');
-			QuotaModel quota = quotaMapForFetch.get(userId);
+			QuotaModel quota = quotaMap.get(userId);
 			quota.quotaId = sobj.Id;
 			quota.periodId = (String) sobj.get('PeriodId');
-			quota.amount = (Double) sobj.get(isQuantity() ? 'QuotaQuantity' : 'QuotaAmount');
-			quota.isQuantity = isQuantity();
+			quota.amount = (Double) sobj.get(isQuant ? 'QuotaQuantity' : 'QuotaAmount');
+			quota.isQuantity = isQuant;
 			
 			if (isMultiCurrencyOrg) {
 				quota.currencyIsoCode = (String) sobj.get('CurrencyIsoCode');
 			}
 		}
 		
-		List<QuotaModel> ret = quotaMapForFetch.values();
+		List<QuotaModel> ret = quotaMap.values();
 		ret.sort();
+        System.debug(loggingLevel.INFO, 'Returning ' + ret.size() + ' rows, # from DB= ' + quotasFromDB.size());
 		return ret;
 	}
+    
+    @RemoteAction
+    public static void saveRemoteAction(List<QuotaModel> quotas, Id periodId) {
+        if (!PermUtil.isWriteAllowed()) {
+            NoAccessException e = new NoAccessException();
+            e.setMessage(System.Label.QE_Quota_NoWritePerm);
+            throw e;
+        }
+            
+        saveInternal(quotas, periodId);        
+    }
+    
 	
-	public PageReference save() {
-		PageReference ret = null;
-		
-		try {
-			ret = saveInternal(quotaMap.values());
-		}
-		catch (System.DMLException ex) {
-			// Can't tell if Quantity is not enabled for this org, so need to rely
-			// on runtime exceptions.
-			if (StatusCode.INVALID_FIELD_FOR_INSERT_UPDATE == ex.getDmlType(0)
-					&& ex.getDmlFields(0).get(0).getDescribe().getName().equals('QuotaQuantity')) {
-			}
-			else if (StatusCode.DUPLICATE_VALUE == ex.getDmlType(0)) {
-				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,
-									 System.Label.QE_Quarterly_StartMonthOnly));
-			}
-			else if (ex.getMessage().contains('unless Product Families for Forecasting is enabled')) {
-			}
-			else {
-				throw ex;
-			}
-		}
-		
-		quotaMap.clear();
-		return ret;
-	}
-	
-	private PageReference saveInternal(List<QuotaModel> quotaModelList) {
+	private static void saveInternal(List<QuotaModel> quotaModelList, Id periodId) {
+        Period period = CalendarUtil.getPeriodById(periodId);
+        
 		List<ForecastingQuota> quotasList = new List<ForecastingQuota>();
+        List<Id> idsToDelete = new List<Id>();
 		
 		for (QuotaModel q : quotaModelList) {
 			System.debug(loggingLevel.INFO, 'Save:' + q.ownerName + '=' + q.amount);
 			
 			// Don't save blank values. Look for objects where the ID and amount are null.
-			// No support for deleting quotas - if clearing out a prevoiusly-saved quota,
-			// then it's updated to a 0 quota.
 			if (q.quotaId == null && (q.amount == null || q.amount == 0 || q.amount == 0.0))
 				continue;
+
+            if (q.isDeleted != null && q.isDeleted) {
+                idsToDelete.add(q.quotaId);
+                continue;
+            }
+                
 				
 			ForecastingQuota fq = new ForecastingQuota(Id = q.quotaId,
-					QuotaOwnerId = q.ownerId, StartDate = q.startDate, ForecastingTypeId = this.forecastingTypeId);
+					QuotaOwnerId = q.ownerId, StartDate = period.StartDate, ForecastingTypeId = q.forecastingTypeId);
 					
 			if (q.isQuantity) {
 				fq.QuotaQuantity = q.amount;
@@ -320,34 +317,41 @@ public with sharing class QuotaController {
 			quotasList.add(fq);
 		}
 		
-		upsert quotasList;
-		return null;
+        if (quotasList.size() > 0)
+			upsert quotasList;
+        
+        if (idsToDelete.size() > 0) {
+            List<ForecastingQuota> objToDelete = [SELECT Id FROM ForecastingQuota WHERE Id IN :idsToDelete];
+            delete objToDelete;
+        }
+		return;
 	}
+    
+    public static Id getRootRoleId() {
+        if (PermUtil.isReadOnlyAll() || PermUtil.isReadWriteAll())
+            return null;
+        else
+            return RoleUtils.getRoleIdByUserId(thisUserId);
+    }
 	
 	public List<SelectOption> getAvailablePeriodTypes() {
 		List<SelectOption> types = new List<SelectOption>();
-		types.add(new SelectOption('Month','Month'));
-		types.add(new SelectOption('Quarter','Quarter'));
+        List<SObject> typesFromQuery = [SELECT Type FROM Period WHERE Id IN (SELECT PeriodId from ForecastingItem) GROUP BY Type];
+        for (Sobject s : typesFromQuery) {        
+            types.add(new SelectOption((String)s.get('Type'),(String) s.get('Type')));
+        }
+        if (typesFromQuery.size() == 1) {
+            periodType = types.get(0).getValue();
+        }
 		return types;
 	}
 	
 	public List<SelectOption> getAvailablePeriods() {
-		startDate = CalendarUtil.getPeriodForNow(periodType);
 		return CalendarUtil.getAvailablePeriods(null, periodType);
 	}
 	
 	public static List<SelectOption> getActiveForecastingTypes() {
 		return ForecastingTypeUtil.getActiveForecastingTypesAsOptions();
-	}
-	
-	public List<SelectOption> getAvailablePeriodsForApplyFuture() {
-		return CalendarUtil.getAvailablePeriods(startDate, this.periodType);
-	}
-	
-	
-	
-	public Boolean getIsApplyToPeriodDisabled() {
-		return futureDate.monthsBetween(startDate) == 0;
 	}
 	
 	public static List<SelectOption> getQuantityOptions() {
@@ -361,7 +365,12 @@ public with sharing class QuotaController {
 		return ProductFamilyUtil.getActiveProductFamilies();
 	}
 	
-	public String getCurrencyColumnHeader() {
+    public static String getNameColumnHeader() {
+        Map<String, Schema.SObjectField> M = Schema.SObjectType.User.fields.getMap();
+        return M.get('Name').getDescribe().getLabel();
+    }
+    
+	public static String getCurrencyColumnHeader() {
 		if (UserInfo.isMultiCurrencyOrganization()) {
 			Map<String, Schema.SObjectField> M = Schema.SObjectType.ForecastingQuota.fields.getMap();
 			Schema.SObjectField isof = M.get('currencyIsoCode');
@@ -373,21 +382,19 @@ public with sharing class QuotaController {
 		}
 	}
 	
-	public String getQuotaColumnHeader() {
+	public static String getQuotaColumnHeader(Boolean isQuantity) {
 		Map<String, Schema.SObjectField> M = Schema.SObjectType.ForecastingQuota.fields.getMap();
 		
-		if (isQuantity()) {
+		if (isQuantity) {
 			return M.get('QuotaQuantity').getDescribe().getLabel();
 		}
 		else {
 			return M.get('QuotaAmount').getDescribe().getLabel();
-		}
-		
-		//return isQuantity() ? 'Quota (Units)' : 'Quota (amount)';
+		}		
 	}
 	
-	public boolean getRenderCurrencyColumn() {
-		return isMultiCurrencyOrg && !isQuantity();
+	public boolean getRenderCurrencyColumn(Boolean isQuantity) {
+		return isMultiCurrencyOrg && !isQuantity;
 	}
 	
 	public List<SelectOption> getAvailableIsoCodes() {
@@ -398,6 +405,8 @@ public with sharing class QuotaController {
 	private static List<SelectOption> availableIsoCodes = isMultiCurrencyOrg ? CurrencyUtil.getAvailableIsoCodes() : null;
 	
 	public boolean displayPopup {get; set;}
+    
+    public String selectedRoles {get; set;}
 	
 	public void closePopup() {
 		displayPopup = false;
@@ -406,36 +415,38 @@ public with sharing class QuotaController {
 		displayPopup = true;
 	}
 	
-	public PageReference applyToPeriod() {
-		// Get current period's quotas
-		List<QuotaModel> currentPeriodQuotas = quotaMap.values();
-		
-		// Get any saved quotas for the future period
+    @RemoteAction
+    public static void saveToPeriodRemoteAction(final Id forecastingTypeId, final Id futurePeriodId, final String selectedProductFamily, List<Id> roleIds, List<QuotaModel> quotas) {
+
+        if (!PermUtil.isWriteAllowed()) {
+            NoAccessException e = new NoAccessException();
+            e.setMessage(System.Label.QE_Quota_NoWritePerm);
+            throw e;
+        }
+
+        ForecastingType forecastingType = ForecastingTypeUtil.getForecastingTypeById(forecastingTypeId);
+        List<QuotaModel> futureQuotas = refreshQuotas(futurePeriodId, forecastingType, selectedProductFamily, roleIds);
+        Period futurePeriod = CalendarUtil.getPeriodById(futurePeriodId);
+        
+        // Get any saved quotas for the future period
 		Map<Id, QuotaModel> quotasForFuture = new Map<Id, QuotaModel>();
-		getQuotasForPeriod(futureDate, quotasForFuture);
+        for (QuotaModel q : futureQuotas) {
+            quotasForFuture.put(q.ownerId, q);
+        }
 		
 		// Modify future period's quotas with this period's numbers
-		for (QuotaModel m : currentPeriodQuotas) {
+		for (QuotaModel m : quotas) {
 			QuotaModel m2 = quotasForFuture.get(m.ownerId);
+            m2.startDate = futurePeriod.StartDate;
+            m2.periodId = futurePeriodId;
 			m2.amount = m.amount;
 			
 			if (isMultiCurrencyOrg) {
 				m2.currencyIsoCode = m.currencyIsoCode;
 			}
 		}
-		
-		PageReference ret = null;
-		
-		try {
-			ret = saveInternal(quotasForFuture.values());
-		}
-		catch (System.DMLException ex) {
-			if (StatusCode.DUPLICATE_VALUE == ex.getDmlType(0)) {
-				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,
-									 System.Label.QE_Quarterly_StartMonthOnly));
-			}
-		}
-		
-		return ret;
+        
+        saveInternal(quotasForFuture.values(), futurePeriodId);
+
 	}
 }

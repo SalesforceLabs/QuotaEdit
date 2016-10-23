@@ -3,6 +3,17 @@ public with sharing class CalendarUtil {
 	public static List<SelectOption> getAvailableMonthlyPeriods(Date startDateToDisable) {
 		return getAvailablePeriods(startDateToDisable, 'Month');
 	}
+    
+    public static Map<Id,Period> periodCache = new Map<Id,Period>();
+    
+    public static Period getPeriodById(Id periodId) {
+        Period p = periodCache.get(periodId);
+        if (p == null) {
+            p = [SELECT FullyQualifiedLabel, StartDate, FiscalYearSettingsId, Number, Type FROM Period WHERE Id=:periodId];
+            periodCache.put(periodId, p);
+        }
+        return p;
+    }
 	
     public static List<SelectOption> getAvailablePeriods(Date startDateToDisable, String typeOfPeriod) {
     	if(typeOfPeriod == null || typeOfPeriod == ''){
@@ -14,13 +25,11 @@ public with sharing class CalendarUtil {
         
         List<FiscalYearSettings> fysettings = [SELECT Id, IsStandardYear, QuarterPrefix, PeriodPrefix, Name FROM FiscalYearSettings LIMIT 999];
 
-        List<Period> periods = [SELECT StartDate, FiscalYearSettingsId, Number, Type FROM Period WHERE EndDate > :startDate AND Type=:typeOfPeriod ORDER BY StartDate LIMIT 999];
-        if (periods == null || periods.size() == 0)
-            return options;
-        
+        List<Period> periods = [SELECT FullyQualifiedLabel, StartDate, FiscalYearSettingsId, Number, Type FROM Period WHERE EndDate > :startDate AND Type=:typeOfPeriod ORDER BY StartDate LIMIT 999];
         
         for (Period p : periods) {
-            SelectOption o = new SelectOption(p.StartDate.format(), CalendarUtil.getLabelForOption(p, fysettings));
+            periodCache.put(p.Id, p);
+            SelectOption o = new SelectOption(p.Id, p.FullyQualifiedLabel);
             if (startDateToDisable != null && p.StartDate.daysBetween(startDateToDisable) == 0) {
                 o.setDisabled(True);
             }
@@ -29,37 +38,18 @@ public with sharing class CalendarUtil {
         return options;
     }
     
-    public static String getLabelForOption(Period p, List<FiscalYearSettings> fySettings){
-    	FiscalYearSettings currentSetting;
-    	for (FiscalYearSettings fySetting : fySettings) {
-    		if(fySetting.Id.equals(p.FiscalYearSettingsId)){
-    			currentSetting = fySetting;
-    			break;
-    		}
-    	}
-    	
-    	if(p.Type.equals('Month')){
-	    	if(currentSetting.IsStandardYear){
-	    		return p.StartDate.month() + ' FY ' + currentSetting.Name;
-	    	}else{
-				return currentSetting.periodPrefix + ' ' + p.Number + ' FY ' + currentSetting.Name;
-	    	}
-    	}else if(p.Type.equals('Quarter')){
-    		if(currentSetting.IsStandardYear){
-	    		return 'FQ' + p.Number + ' FY ' + currentSetting.Name;
-	    	}else{
-				return currentSetting.quarterPrefix + ' ' + p.Number + ' FY ' + currentSetting.Name;
-	    	}
-    	}
-    	return p.StartDate.format();
-    }
     
-    public static Date getPeriodForNow(String periodType) {
+    public static Id getPeriodForNow(String periodType) {
         Date today = Date.today();
-        List<Period> periods = [SELECT StartDate FROM Period Where EndDate >= :today AND StartDate <= :today AND Type = :periodType ORDER BY StartDate DESC LIMIT 1];
-        if (periods == null || periods.size() == 0)
-            return today;
-        return periods.get(0).StartDate;
+        List<Period> periods;
+        periods = [SELECT StartDate FROM Period Where EndDate >= :today AND StartDate <= :today AND Type = :periodType ORDER BY StartDate DESC LIMIT 1];
+        if (periods == null || periods.size() == 0){
+            // KA - updated the SOQL to avoid null exception
+          periods = [SELECT StartDate FROM Period  ORDER BY StartDate DESC LIMIT 1];
+           
+        }
+          
+        return periods.isEmpty() ? null : periods.get(0).Id;
     }
     
 }
