@@ -183,14 +183,6 @@
         <value>Forecasting</value>
     </labels>
     <labels>
-        <fullName>QE_Using_quarterly_forecasts</fullName>
-        <categories>QuotaEdit</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Using quarterly forecasts</shortDescription>
-        <value>Using quarterly forecasts?</value>
-    </labels>
-    <labels>
         <fullName>QE_Value_Not_set</fullName>
         <language>en_US</language>
         <protected>true</protected>
