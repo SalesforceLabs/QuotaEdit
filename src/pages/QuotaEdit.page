@@ -53,11 +53,11 @@
         // Find the corresponding input component (same index in the ID)
         // Show the input component.
         function tryHide(component) {
+            if (readOnly)
+                return;
             component.style.display = "none";
             var outputComponentId = component.id.replace("Output","Input");
             document.getElementById(outputComponentId).style.display = "inline";
-            //var pencilComponentId = component.id.replace("quotaOutput","pencilIcon").replace("currencyOutput","currencyPencilIcon");
-            //document.getElementById(pencilComponentId).style.display = "none";
         }
         
         function tryHidePencil(component) {
@@ -348,7 +348,7 @@
                 
                 <apex:form rendered="{!NOT(ForecastingEnabled)}">
                     <apex:outputText style="color:red;font-weight:bold"
-                                     value="{!$Label.QE_Forecasting_Disabled}" />
+                                     value="{!$Label.editquotas__qe_forecasting_disabled}" />
                 </apex:form>
                 <div class="slds-page-header " role="banner">
                     <div class="slds-media">
@@ -371,7 +371,7 @@
                         
                         <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
                             <apex:actionStatus style="color:red;font-weight:bold"
-                                               id="updatingStatus" startText=" {!$Label.QE_Status_Refreshing}"
+                                               id="updatingStatus" startText=" {!$Label.editquotas__qe_status_refreshing}"
                                                stopText="" />
                         </div>
                         
@@ -396,7 +396,7 @@
                             <apex:selectRadio value="{!selectedPeriodType}">
                                 
                                 <apex:actionSupport event="onchange"
-                                                    reRender="periodSelectorPanel" status="updatingStatus" />
+                                                    reRender="periodSelector" status="updatingStatus" />
                                 <apex:selectOptions value="{!availablePeriodTypes}" />
                             </apex:selectRadio>
                             
@@ -407,7 +407,7 @@
                             {!$Label.QE_PeriodDateRange}
                         </div>
                         
-                        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 slds-p-top--x-small">
+                        <div id="periodSelectorPanel" class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 slds-p-top--x-small">
                             
                             <apex:selectList id="periodSelector" multiSelect="false" styleClass="sf1select"
                                              size="1" > <!-- value="{!currentPeriodId}" -->
@@ -415,7 +415,6 @@
                                                     status="updatingStatus" />
                                 <apex:selectOptions value="{!availablePeriods}" />
                             </apex:selectList>
-                            <!--<apex:commandLink action="{!showPopup}" style="color:blue" value="Using quarterly forecasts?" rerender="quarterlyPopup"/><br/>-->
                         </div>
                         
                         <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12 slds-p-top--x-small">
@@ -456,7 +455,7 @@
                         
                         <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12 slds-p-top--x-small">
                             
-                            {!$Label.QE_Roles} 
+                            {!$Label.editquotas__qe_roles} 
                         </div>
                         
                         <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--10-of-12 slds-p-top--x-small">
@@ -545,34 +544,7 @@ KA - <p class="slds-text-heading--small">{!$Label.QE_Copy_Quota}</p>
                 
             </div>
             <style type="text/css">
-                .custPopup {
-                background-color: white;
-                border-width: 2px;
-                border-style: solid;
-                z-index: 9999;
-                left: 50%;
-                padding: 10px;
-                position: absolute;
-                /* These are the 3 css properties you will need to change so the popup 
-                displays in the center of the screen. First set the width. Then set 
-                margin-left to negative half of what the width is. You can add 
-                the height property for a fixed size pop up if you want.*/
-                width: 500px;
-                margin-left: -250px;
-                top: 100px;
-                }
-                
-                .popupBackground {
-                background-color: black;
-                opacity: 0.20;
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-                z-index: 9998;
-                }
-                
+
                 .divTable{
                 display: table;
                 width: 100%;

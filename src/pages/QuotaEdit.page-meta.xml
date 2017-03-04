@@ -5,9 +5,4 @@
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <description>Quota Edit VisualForce Page</description>
     <label>QuotaEdit</label>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>8</minorNumber>
-        <namespace>sf_chttr_apps</namespace>
-    </packageVersions>
 </ApexPage>
