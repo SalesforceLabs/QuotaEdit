@@ -20,16 +20,16 @@ public with sharing class CalendarUtil {
     		typeOfPeriod='Month';
     	}
         // By popular request, the lookback is expanded to a year.
-        Date startDate = Date.today().addMonths(-13);
+        Date today = Date.today();
+        Date startDate = today.addMonths(-13);
         List<SelectOption> options = new List<SelectOption>();
         
-        List<FiscalYearSettings> fysettings = [SELECT Id, IsStandardYear, QuarterPrefix, PeriodPrefix, Name FROM FiscalYearSettings LIMIT 999];
-
-        List<Period> periods = [SELECT FullyQualifiedLabel, StartDate, FiscalYearSettingsId, Number, Type FROM Period WHERE EndDate > :startDate AND Type=:typeOfPeriod ORDER BY StartDate LIMIT 999];
+        List<Period> periods = [SELECT FullyQualifiedLabel, EndDate FROM Period WHERE EndDate > :startDate AND Type=:typeOfPeriod ORDER BY StartDate LIMIT 999];
         
         for (Period p : periods) {
             periodCache.put(p.Id, p);
-            SelectOption o = new SelectOption(p.Id, p.FullyQualifiedLabel);
+            String label = p.FullyQualifiedLabel + (p.EndDate > today ? '' : ' ' + System.Label.QE_In_the_past);
+            SelectOption o = new SelectOption(p.Id, label);
             if (startDateToDisable != null && p.StartDate.daysBetween(startDateToDisable) == 0) {
                 o.setDisabled(True);
             }
