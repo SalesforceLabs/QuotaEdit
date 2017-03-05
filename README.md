@@ -1,4 +1,4 @@
-Edit Quotas - version 2.1 (2016-10-22)
+Edit Quotas - version 2.3 (2017-03-05)
 ===========
 
 UI for viewing and editing quotas for Collaborative Forecasting
@@ -14,7 +14,7 @@ UI for viewing and editing quotas for Collaborative Forecasting
     perm
   - Read only for subordinate quotas for those without the Manage Quotas perm
   
-* Version 2.1 is adapted for the Winter '17 release. 
+* Version 2.3 is adapted for the Winter '17 release. 
  - Lightning UI
  - Displays forecast hierarchy as a tree, allows you to choose which roles' quotas to change
  - Permission Set for easily granting access to the app
