@@ -17,6 +17,10 @@
         <name>QE_Forecasting_Disabled</name>
     </customLabels>
     <customLabels>
+        <label>(avant)</label>
+        <name>QE_In_the_past</name>
+    </customLabels>
+    <customLabels>
         <label>Laisser les autres mois vides.</label>
         <name>QE_Other_months_blank</name>
     </customLabels>
@@ -97,11 +101,7 @@
         <name>QE_Title</name>
     </customLabels>
     <customLabels>
-        <label>Utilisation des prévisions trimestrielles?</label>
-        <name>QE_Using_quarterly_forecasts</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- QE_Value_Not_set --></label>
+        <label>indéfini</label>
         <name>QE_Value_Not_set</name>
     </customLabels>
     <customTabs>
