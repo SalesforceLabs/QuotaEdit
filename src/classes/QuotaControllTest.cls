@@ -23,7 +23,7 @@
 @isTest(SeeAllData=true)
 private class QuotaControllTest {
     
-    private static User createUser(String username, String lastName, Boolean forecastEnabled) {
+    private static User createUser(String username, String firstName, String lastName, Boolean forecastEnabled) {
         
         String alias = username.split('@').get(0);
         Profile profile = [
@@ -33,6 +33,7 @@ private class QuotaControllTest {
         User user = new User(
             Username = username,
             Email = username,
+            FirstName = firstName,
             LastName = lastName,
             Alias = alias,
             ProfileID = profile.Id,
@@ -47,10 +48,10 @@ private class QuotaControllTest {
     }
     
     static testMethod void getOnlyForecastingUsers() {
-        User a = createUser('a@quota.com', 'ForecastingUser', TRUE);
+        User a = createUser('a@quota.com', 'Fred', 'ForecastingUser', TRUE);
         
         
-        User b = createUser('b@quota.com', 'Non-ForecastingUser', FALSE);
+        User b = createUser('b@quota.com', 'Jane', 'Non-ForecastingUser', FALSE);
         
       
        // CurrencyUtil.getAvailableIsoCodes();
@@ -74,9 +75,9 @@ private class QuotaControllTest {
         Boolean bFound = false;
         
         for (QuotaModel q : quotas.quotaRows) {
-            if (q.ownerName.equals(a.Lastname))
+            if (q.ownerId.equals(a.Id))
                 aFound = true;
-            if (q.ownerName.equals(b.Lastname))
+            if (q.ownerId.equals(b.Id))
                 bFound = true;
         }
         System.assert(aFound);
@@ -86,7 +87,7 @@ private class QuotaControllTest {
     
     static testMethod void updateQuotas() {
         String emaila = 'a@quota.com';
-        User a = createUser(emaila, 'ForecastingUser', TRUE);
+        User a = createUser(emaila, 'Linda', 'ForecastingUser', TRUE);
         QuotaController qc = new QuotaController();
         List<QuotaModel> ret = new List<QuotaModel>(); //qc.getQuotasForPeriod(Date.newInstance(date.today().year(), 3, 1), qc.quotaMap);
         
