@@ -24,7 +24,7 @@ public with sharing class CalendarUtil {
         Date startDate = today.addMonths(-13);
         List<SelectOption> options = new List<SelectOption>();
         
-        List<Period> periods = [SELECT FullyQualifiedLabel, EndDate FROM Period WHERE EndDate > :startDate AND Type=:typeOfPeriod ORDER BY StartDate LIMIT 999];
+        List<Period> periods = [SELECT FullyQualifiedLabel, StartDate, EndDate FROM Period WHERE EndDate > :startDate AND Type=:typeOfPeriod ORDER BY StartDate LIMIT 999];
         
         for (Period p : periods) {
             periodCache.put(p.Id, p);
