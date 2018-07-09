@@ -49,16 +49,14 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>TestPageController</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>TreeViewController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <description>Allow access to the Edit Quotas tab. 
 This permission set does not govern the ability to view/edit quotas. That is done via user and profile permissions.</description>
+    <hasActivationRequired>false</hasActivationRequired>
     <label>Edit Quotas access</label>
+    <license>Salesforce</license>
     <pageAccesses>
         <apexPage>QuotaEdit</apexPage>
         <enabled>true</enabled>
@@ -67,5 +65,4 @@ This permission set does not govern the ability to view/edit quotas. That is don
         <tab>Edit_Quotas</tab>
         <visibility>Visible</visibility>
     </tabSettings>
-    <userLicense>Salesforce</userLicense>
 </PermissionSet>

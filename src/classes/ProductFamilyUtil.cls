@@ -1,4 +1,4 @@
-public class ProductFamilyUtil {
+public with sharing class ProductFamilyUtil {
 
     public static List<SelectOption> getActiveProductFamilies() {
         Schema.DescribeFieldResult f = Schema.sObjectType.Product2.fields.Family;

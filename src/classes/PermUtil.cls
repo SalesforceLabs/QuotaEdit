@@ -1,4 +1,4 @@
-public class PermUtil {
+public with sharing class PermUtil {
 
     private static boolean manageQuotas = null;
     private static boolean viewAllForecasts = null;

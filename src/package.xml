@@ -9,16 +9,17 @@
         <members>CurrencyUtil</members>
         <members>ForecastingTypeUtil</members>
         <members>LoadQuotasModel</members>
-        <members>PermUtil</members>
-        <members>ProductFamilyUtil</members>
         <members>QuotaController</members>
         <members>QuotaControllTest</members>
         <members>QuotaModel</members>
         <members>RoleNodeModel</members>
         <members>RoleUtils</members>
         <members>TreeViewController</members>
-        <members>TestPageController</members>
         <name>ApexClass</name>
+    </types>
+    <types>
+        <members>TreeView</members>
+        <name>ApexComponent</name>
     </types>
     <types>
         <members>*</members>
@@ -46,5 +47,5 @@
         <members>*</members>
         <name>Translations</name>
     </types>
-    <version>37.0</version>
+    <version>38.0</version>
 </Package>
