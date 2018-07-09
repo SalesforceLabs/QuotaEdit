@@ -1,0 +1,75 @@
+<apex:component controller="TreeViewController">
+    <apex:attribute name="selectable" type="Boolean" assignTo="{!selectable}" description="Do you want nodes to be selectable?" />
+    <apex:attribute name="value" type="String" description="IDs of selected Nodes in CSV format" />
+    <apex:attribute name="roleOrUserId" assignTo="{!roleId}" type="Id" description="ID of this user or their role" />
+    <apex:inputHidden id="selectedKeys" value="{!value}" />
+    <apex:includeScript value="{!URLFOR($Resource.DynaTree, 'jquery/jquery.js' )}" />
+    <apex:includeScript value="{!URLFOR($Resource.DynaTree, 'jquery/jquery-ui.custom.js' )}" />
+    <apex:includeScript value="{!URLFOR($Resource.DynaTree, 'jquery/jquery.cookie.js' )}" />
+    <apex:includeScript value="{!URLFOR($Resource.DynaTree, 'src/jquery.dynatree.js' )}" />
+    
+    <apex:stylesheet value="{!URLFOR($Resource.DynaTree, 'src/skin/ui.dynatree.css')}" />
+    
+    <!-- Add code to initialize the tree when the document is loaded: -->
+    <script type="text/javascript">
+    $(function(){
+        // Attach the dynatree widget to an existing <div id="tree"> element
+        // and pass the tree options as an argument to the dynatree() function:
+        $("#tree").dynatree({
+            onActivate: function(node) {
+                
+            },
+            persist: false,
+            checkbox: {!selectable},
+            generateIds: false,
+            classNames: {
+                checkbox: "dynatree-checkbox",
+                expanded: "dynatree-expanded"
+            },
+            selectMode: 2,
+            children: {!JsonString},
+            onSelect: function(select, node) {
+                // Get a list of all selected nodes, and convert to a key array:
+                var selKeys = $.map(node.tree.getSelectedNodes(), function(node){
+                    return node.data.key;
+                });
+                jQuery(document.getElementById("{!$Component.selectedKeys}")).val(selKeys.join(","));
+                
+                // Get a list of all selected TOP nodes
+                var selRootNodes = node.tree.getSelectedNodes(true);
+                // ... and convert to a key array:
+                var selRootKeys = $.map(selRootNodes, function(node){
+                    return node.data.key;
+                });
+            },
+            onLazyRead: function(node){
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.TreeViewController.getChildNodesJSON}', 
+                    node.data.key, 
+                    function(result, event){
+                        if (event.status) {
+                            var jsonObj = JSON.parse(result);
+                            node.addChild(jsonObj);
+                            node.setLazyNodeStatus(DTNodeStatus_Ok);
+                        } else if (event.type === 'exception') {
+                            document.getElementById("responseErrors").innerHTML = 
+                                event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                        } else {
+                            document.getElementById("responseErrors").innerHTML = event.message;
+                        }
+                    },
+                    {escape: false}
+                );
+                
+            }
+            
+            
+        });
+    });
+    </script>
+    
+    <!-- Add a <div> element where the tree should appear: -->
+    <div id="tree" style="width:400px; overflow:auto; line-height:1;"> </div>
+    <div id="responseErrors"> </div>
+    
+</apex:component>
