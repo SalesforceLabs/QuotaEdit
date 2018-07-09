@@ -1,4 +1,4 @@
-Edit Quotas - version 2.3 (2017-03-05)
+Edit Quotas - version 2.5 (2018-07-07)
 ===========
 
 About
