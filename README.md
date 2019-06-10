@@ -6,8 +6,7 @@ About
 UI for viewing and editing quotas for Collaborative Forecasting
 ![Screenshot](QuotaUI.png "Screenshot from Winter '17")
 
-Edit Quotas is a Salesforce.com managed app for viewing and editing quotas. Check out the AppExchange listing [here](https://appexchange.salesforce.com/listingDetail?listingId=a0N3000000B41EqEAJ). 
-
+Edit Quotas is a Salesforce.com managed app for viewing and editing quotas. The AppExchange listing is now private since the features have moved into core. 
 
 Installation instructions
 -------------------------
