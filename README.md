@@ -1,5 +1,6 @@
 Edit Quotas - version 2.5 (2018-07-07)
 ===========
+This functionality is now a part of core since release 220 
 
 About
 -----
