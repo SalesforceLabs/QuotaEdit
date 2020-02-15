@@ -1,3 +1,9 @@
+** This project is now deprecated.**
+====================================
+Salesforce has added support to edit quotas from within the Forecasting app, obviating the need for this add-on.**
+
+
+
 Edit Quotas - version 2.5 (2018-07-07)
 ===========
 This functionality is now a part of core since release 220 
